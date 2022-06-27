@@ -3,7 +3,6 @@ import 'package:flutter_map/plugin_api.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:tu_carbure/view/screens/login.dart';
-import 'package:tu_carbure/view/screens/register.dart';
 import 'package:tu_carbure/view/screens/map.dart';
 
 import 'favoris.dart';
@@ -23,7 +22,7 @@ class _MainPageState extends State<MainPage> {
   final List<Widget> _widget = [
     const MyMap(),
     const Favoris(),
-    const Register(),
+    const Login(),
   ];
 
   void _changePage(int index){
