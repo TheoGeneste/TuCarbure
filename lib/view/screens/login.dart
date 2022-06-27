@@ -5,6 +5,40 @@ class Login extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Center(
+              child: Column(children: <Widget>[
+                Text("Favoris", style:TextStyle(fontSize: 30)),
+                Container(
+                  margin: EdgeInsets.all(20),
+                  child: Table(
+                    defaultColumnWidth: FixedColumnWidth(120.0),
+                    border: TableBorder.all(
+                        color: Colors.black,
+                        style: BorderStyle.solid
+                        ),
+                    children: [
+                      TableRow( children: [
+                        Column(children:[Text('Station', style: TextStyle(fontSize: 20.0))]),
+                        Column(children:[Text('Favoris', style: TextStyle(fontSize: 20.0))]),
+                      ]),
+                      TableRow( children: [
+                        Column(children:[Text('Leclerc')]),
+                        Column(children:[ IconButton(icon: const Icon(Icons.star),
+                          onPressed: () {
+                          },
+                        )]),
+                      ]),
+                      TableRow( children: [
+                        Column(children:[Text('Carrefour')]),
+                        Column(children:[ IconButton(icon: const Icon(Icons.star),
+                          onPressed: () {
+                          },
+                        )]),
+                      ]),
+                    ],
+                  ),
+                ),
+              ])
+          );
   }
 }
