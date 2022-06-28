@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:tu_carbure/view/screens/login.dart';
@@ -23,15 +25,14 @@ class _MainPageState extends State<MainPage> {
     const MyMap(),
     const Favoris(),
     const Login(),
+    const StationCreation(),
   ];
-
 
   void _changePage(int index){
     setState((){
       _index = index;
     });
   }
-
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
@@ -58,6 +59,7 @@ class _MainPageState extends State<MainPage> {
                 child: IconButton(
                   icon: const Icon(Icons.add,color: Colors.green),
                   onPressed: () {
+                    Navigator.pushNamed(context, StationCreation.routeNames);
                   },
                 ),
                 visible: _index == 0
