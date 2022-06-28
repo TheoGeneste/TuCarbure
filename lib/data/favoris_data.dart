@@ -9,14 +9,13 @@ class FavorisData{
     await file.writeAsString(text);
   }
 
-  Future<String> _read() async {
+  Future<String> getFavoris() async {
     String text = "";
     try {
       final Directory directory = await getApplicationDocumentsDirectory();
       final File file = File('${directory.path}/favorites.json');
       print('${directory.path}/favorites.json');
       text = await file.readAsString();
-      print(text);
     } catch (e) {
       print("Couldn't read file");
     }

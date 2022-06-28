@@ -1,20 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:tu_carbure/data/favoris_data.dart';
 
 class Favoris extends StatelessWidget {
   const Favoris({Key? key}) : super(key: key);
 
-  _init() {
-    throw UnimplementedError();
-  }
-  _read() {
-    throw UnimplementedError();
+  Future<List> getFavoris() async {
+    var plainjson = await FavorisData().getFavoris();
+    print(plainjson);
+    var films = plainjson[1] as List;
+    return films;
   }
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-        child:Center(
+    return FutureBuilder(builder: (context, snapshot){
+      return SingleChildScrollView(
+          child:Center(
               child: Column(children: <Widget>[
                 Text("Favoris", style:TextStyle(fontSize: 30)),
                 Container(
@@ -24,7 +26,7 @@ class Favoris extends StatelessWidget {
                     border: TableBorder.all(
                         color: Colors.black,
                         style: BorderStyle.solid
-                        ),
+                    ),
                     children: [
                       TableRow(children: [
                         Column(children:[Text('Station', style: TextStyle(fontSize: 20.0))]),
@@ -49,6 +51,7 @@ class Favoris extends StatelessWidget {
                 ),
               ])
           )
-    );
+      );
+    }, future: getFavoris());
   }
 }
