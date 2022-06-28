@@ -9,7 +9,7 @@ class FavorisData{
     await file.writeAsString(text);
   }
 
-  Future<String> _read() async {
+  Future<String> getFavoris() async {
     String text = "";
     try {
       final Directory directory = await getApplicationDocumentsDirectory();
@@ -20,6 +20,10 @@ class FavorisData{
       print("Couldn't read file");
     }
     return text;
+  }
+  
+  _init(){
+    _write("{[{\"id\":\"1\", \"name\":\"Leclerc\"}]}");
   }
 
 }
