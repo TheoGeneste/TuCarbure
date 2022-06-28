@@ -4,9 +4,17 @@ import 'package:flutter/material.dart';
 class Favoris extends StatelessWidget {
   const Favoris({Key? key}) : super(key: key);
 
+  _init() {
+    throw UnimplementedError();
+  }
+  _read() {
+    throw UnimplementedError();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return SingleChildScrollView(
+        child:Center(
               child: Column(children: <Widget>[
                 Text("Favoris", style:TextStyle(fontSize: 30)),
                 Container(
@@ -18,7 +26,7 @@ class Favoris extends StatelessWidget {
                         style: BorderStyle.solid
                         ),
                     children: [
-                      TableRow( children: [
+                      TableRow(children: [
                         Column(children:[Text('Station', style: TextStyle(fontSize: 20.0))]),
                         Column(children:[Text('Favoris', style: TextStyle(fontSize: 20.0))]),
                       ]),
@@ -40,6 +48,7 @@ class Favoris extends StatelessWidget {
                   ),
                 ),
               ])
-          );
+          )
+    );
   }
 }
