@@ -18,11 +18,10 @@ class _MyMapState extends State<MyMap> {
 
   @override
   Widget build(BuildContext context) {
-    _determinePosition();
     _getCurrentLocation();
     _determinePosition();
-    StationViewModel stationViewModel = context.read<StationViewModel>();
-    var stations = stationViewModel.getStationInPerimetre(_currentPosition.longitude, _currentPosition.latitude, 50);
+     StationViewModel stationViewModel = context.read<StationViewModel>();
+     var stations = stationViewModel.getStationInPerimetre(_currentPosition.longitude, _currentPosition.latitude, 50);
     return Center(
       child: Container(
         child: Column(
@@ -53,7 +52,6 @@ class _MyMapState extends State<MyMap> {
                             Icons.local_gas_station, color: Colors.green,
                           ),
                         ),
-
                       ],
                     ),
                   ],

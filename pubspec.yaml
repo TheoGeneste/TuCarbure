@@ -39,6 +39,7 @@ dependencies:
   path_provider: ^2.0.11
   geolocator: ^9.0.0
   sliding_up_panel: ^2.0.0+1
+  provider: ^6.0.3
 
 dev_dependencies:
   flutter_test:

@@ -58,6 +58,7 @@ class _MainPageState extends State<MainPage> {
                 child: IconButton(
                   icon: const Icon(Icons.add,color: Colors.green),
                   onPressed: () {
+                    Navigator.pushNamed(context, StationCreation.routeNames);
                   },
                 ),
                 visible: _index == 0
