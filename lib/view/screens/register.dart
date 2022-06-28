@@ -45,6 +45,7 @@ class Register extends StatelessWidget {
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal:32, vertical: 16),
                           child: TextFormField(
+                            obscureText: true,
                             decoration: const InputDecoration(
                               border: UnderlineInputBorder(),
                               labelText: 'Mot de passe',
@@ -54,6 +55,7 @@ class Register extends StatelessWidget {
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal:32, vertical: 16),
                           child: TextFormField(
+                            obscureText: true,
                             decoration: const InputDecoration(
                               border: UnderlineInputBorder(),
                               labelText: 'Confirmation du mot de passe',

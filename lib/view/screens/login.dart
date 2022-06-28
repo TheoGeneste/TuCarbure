@@ -20,13 +20,14 @@ class Login extends StatelessWidget {
                           child: TextFormField(
                             decoration: const InputDecoration(
                               border: UnderlineInputBorder(),
-                              labelText: 'Nom d\'utilisateur',
+                              labelText: 'Email',
                             ),
                           ),
                         ),
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal:32, vertical: 16),
                           child: TextFormField(
+                            obscureText: true,
                             decoration: const InputDecoration(
                               border: UnderlineInputBorder(),
                               labelText: 'Mot de passe',

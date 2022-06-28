@@ -3,7 +3,9 @@ import 'package:flutter_map/plugin_api.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:tu_carbure/view/screens/login.dart';
+import 'package:tu_carbure/view/screens/stationCreation.dart';
 import 'package:tu_carbure/view/screens/map.dart';
+import 'package:tu_carbure/view/screens/login.dart';
 
 import 'favoris.dart';
 
@@ -25,6 +27,7 @@ class _MainPageState extends State<MainPage> {
     const Login(),
   ];
 
+
   void _changePage(int index){
     setState((){
       _index = index;
@@ -42,31 +45,36 @@ class _MainPageState extends State<MainPage> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Image.asset("assets/images/TuCarburesBanner.png", width: 200, height: 200),
-              Icon(Icons.add, color: Colors.green,),
+              IconButton(
+                icon: const Icon(Icons.add,color: Colors.green),
+                onPressed: () {
+
+                },
+              ),
               Icon(Icons.filter_alt, color: Colors.green,)
             ],
           )
       ),
       body: _widget[_index],
       bottomNavigationBar: BottomNavigationBar(
-      currentIndex: _index,
-      showUnselectedLabels: false,
-      onTap: _changePage,
-      items: [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.map,),
-          label: 'Map',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.star_border,),
-          label: 'Stations Favoris',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.login,),
-          label: 'Login',
-        )
-      ],
-    ),
+        currentIndex: _index,
+        showUnselectedLabels: false,
+        onTap: _changePage,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.map,),
+            label: 'Map',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.star_border,),
+            label: 'Stations Favoris',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.login,),
+            label: 'Login',
+          )
+        ],
+      ),
     );
   }
 
@@ -82,4 +90,5 @@ class _MainPageState extends State<MainPage> {
     });
   }
 }
+
 
