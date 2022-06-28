@@ -18,48 +18,57 @@ class _MyMapState extends State<MyMap> {
 
   @override
   Widget build(BuildContext context) {
+    List<Marker> _markers = [];
     _getCurrentLocation();
     _determinePosition();
      StationViewModel stationViewModel = context.read<StationViewModel>();
-     var stations = stationViewModel.getStationInPerimetre(_currentPosition.longitude, _currentPosition.latitude, 50);
-    return Center(
-      child: Container(
-        child: Column(
-          children: [
-            Flexible(
-                child: FlutterMap(
-                  options: MapOptions(
-                    center: LatLng(_currentPosition.latitude, _currentPosition.longitude),
-                  ),
-                  layers: [
-                    TileLayerOptions(
-                      urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                      subdomains: ['a', 'b', 'c'],
-                    ),
-                    MarkerLayerOptions(
-                      markers: [
-                        Marker(
-                          point: LatLng(_currentPosition.latitude, _currentPosition.longitude),
-                          width: 80,
-                          height: 80,
-                          builder: (context) => Icon(Icons.location_on, color: Colors.red,),
+    _markers.add(Marker(
+      point: LatLng(_currentPosition.latitude, _currentPosition.longitude),
+      width: 80,
+      height: 80,
+      builder: (context) => Icon(Icons.location_on, color: Colors.red,),
+    ));
+    return FutureBuilder(
+      builder: (context, snapshot){
+        if(snapshot.connectionState == ConnectionState.done && snapshot.hasData){
+          final data = snapshot.data as List;
+          data.forEach((element) {
+            _markers.add(Marker(
+              point: LatLng(element['adresse']['latitude'], element['adresse']['longitude']),
+              width: 80,
+              height: 80,
+              builder: (context) => Icon(Icons.local_gas_station, color: Colors.green,),
+            ));
+          });
+          return Center(
+            child: Container(
+              child: Column(
+                children: [
+                  Flexible(
+                      child: FlutterMap(
+                        options: MapOptions(
+                          center: LatLng(_currentPosition.latitude, _currentPosition.longitude),
                         ),
-                        Marker(
-                          point: LatLng(48.357113, 3.518332),
-                          width: 80,
-                          height: 80,
-                          builder: (context) => Icon(
-                            Icons.local_gas_station, color: Colors.green,
+                        layers: [
+                          TileLayerOptions(
+                            urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                            subdomains: ['a', 'b', 'c'],
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
-                )
-            )
-          ],
-        ),
-      ),
+                          MarkerLayerOptions(
+                              markers: _markers as List<Marker>
+                          ),
+                        ],
+                      )
+                  )
+                ],
+              ),
+            ),
+          );
+        }else{
+          return CircularProgressIndicator();
+        }
+      },
+      future: stationViewModel.getStationInPerimetre(_currentPosition.longitude, _currentPosition.latitude, 100),
     );
   }
 
@@ -67,12 +76,8 @@ class _MyMapState extends State<MyMap> {
     bool serviceEnabled;
     LocationPermission permission;
 
-    // Test if location services are enabled.
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      // Location services are not enabled don't continue
-      // accessing the position and request users of the
-      // App to enable the location services.
       return Future.error('Location services are disabled.');
     }
 
@@ -80,11 +85,6 @@ class _MyMapState extends State<MyMap> {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        // Permissions are denied, next time you could try
-        // requesting permissions again (this is also where
-        // Android's shouldShowRequestPermissionRationale
-        // returned true. According to Android guidelines
-        // your App should show an explanatory UI now.
         return Future.error('Location permissions are denied');
       }
     }
@@ -95,8 +95,6 @@ class _MyMapState extends State<MyMap> {
           'Location permissions are permanently denied, we cannot request permissions.');
     }
 
-    // When we reach here, permissions are granted and we can
-    // continue accessing the position of the device.
     return await Geolocator.getCurrentPosition();
   }
 
@@ -107,7 +105,6 @@ class _MyMapState extends State<MyMap> {
       setState(() {
         _currentPosition = position;
       });
-      print(_currentPosition);
     }).catchError((e) {
       print(e);
     });
