@@ -16,8 +16,8 @@ class _MyMapState extends State<MyMap> {
 
   @override
   Widget build(BuildContext context) {
-    _determinePosition();
     _getCurrentLocation();
+    _determinePosition();
     return Center(
       child: Container(
         child: Column(

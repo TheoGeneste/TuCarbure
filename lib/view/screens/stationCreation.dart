@@ -5,7 +5,8 @@ class StationCreation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return SingleChildScrollView(
+        child:Center(
               child: Column(children: <Widget>[
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 32),
@@ -43,7 +44,7 @@ class StationCreation extends StatelessWidget {
                           child: TextFormField(
                             decoration: const InputDecoration(
                               border: UnderlineInputBorder(),
-                              labelText: 'Adresse de la station',
+                              labelText: 'Distance Maximale',
                             ),
                           ),
                         ),
@@ -78,6 +79,7 @@ class StationCreation extends StatelessWidget {
                     ),
                 ),
               ])
-          );
+          )
+    );
   }
 }
