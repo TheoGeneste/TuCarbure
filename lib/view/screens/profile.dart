@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class Login extends StatelessWidget {
-  const Login({Key? key}) : super(key: key);
+class Profile extends StatelessWidget {
+  const Profile({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -9,7 +9,7 @@ class Login extends StatelessWidget {
               child: Column(children: <Widget>[
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 32),
-                  child:Text("Se connecter", style:TextStyle(fontSize: 30)),
+                  child:Text("Mon profile", style:TextStyle(fontSize: 30)),
                 ),
                 Form(
                     child: Column(
@@ -20,17 +20,43 @@ class Login extends StatelessWidget {
                           child: TextFormField(
                             decoration: const InputDecoration(
                               border: UnderlineInputBorder(),
-                              labelText: 'Email',
+                              labelText: 'Nom d\'utilisateur',
                             ),
                           ),
                         ),
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal:32, vertical: 16),
                           child: TextFormField(
-                            obscureText: true,
+                            decoration: const InputDecoration(
+                              border: UnderlineInputBorder(),
+                              labelText: 'Mail',
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal:32, vertical: 16),
+                          child: TextFormField(
+                            decoration: const InputDecoration(
+                              border: UnderlineInputBorder(),
+                              labelText: 'Numero de téléphone',
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal:32, vertical: 16),
+                          child: TextFormField(
                             decoration: const InputDecoration(
                               border: UnderlineInputBorder(),
                               labelText: 'Mot de passe',
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal:32, vertical: 16),
+                          child: TextFormField(
+                            decoration: const InputDecoration(
+                              border: UnderlineInputBorder(),
+                              labelText: 'Confirmation du mot de passe',
                             ),
                           ),
                         ),
@@ -42,7 +68,7 @@ class Login extends StatelessWidget {
                             style: ElevatedButton.styleFrom(
                               minimumSize: Size.fromHeight(40),
                             ),
-                            child: const Text('Se connecter'),
+                            child: const Text('Modifier'),
                           ),
                         ),
                       ],
