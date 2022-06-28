@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_map/plugin_api.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:latlong2/latlong.dart';
 import 'package:tu_carbure/view/screens/login.dart';
 import 'package:tu_carbure/view/screens/stationCreation.dart';
 import 'package:tu_carbure/view/screens/map.dart';
@@ -18,8 +15,6 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   int _index = 0;
-  late Position _currentPosition;
-  Future<Position> position = Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
   
   final List<Widget> _widget = [
     const MyMap(),
@@ -36,7 +31,6 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    _getCurrentLocation();
     return  Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -76,18 +70,6 @@ class _MainPageState extends State<MainPage> {
         ],
       ),
     );
-  }
-
-  _getCurrentLocation() {
-    Geolocator
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.best, forceAndroidLocationManager: true)
-        .then((Position position) {
-      setState(() {
-        _currentPosition = position;
-      });
-    }).catchError((e) {
-      print(e);
-    });
   }
 }
 
