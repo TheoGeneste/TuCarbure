@@ -16,6 +16,7 @@ class FavorisData{
       final File file = File('${directory.path}/favorites.json');
       print('${directory.path}/favorites.json');
       text = await file.readAsString();
+      print(text);
     } catch (e) {
       print("Couldn't read file");
     }
