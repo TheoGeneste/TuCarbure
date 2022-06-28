@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:tu_carbure/view/screens/login.dart';
 import 'package:tu_carbure/view/screens/stationCreation.dart';
@@ -20,29 +22,28 @@ class _MainPageState extends State<MainPage> {
     const MyMap(),
     const Favoris(),
     const Login(),
+    const StationCreation(),
   ];
-
 
   void _changePage(int index){
     setState((){
       _index = index;
     });
   }
-
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: new Row(
+        title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Image.asset("assets/images/TuCarburesBanner.png", width: 200, height: 200),
               IconButton(
                 icon: const Icon(Icons.add,color: Colors.green),
                 onPressed: () {
-
+                  Navigator.pushNamed(context, StationCreation.routeNames);
                 },
               ),
               Icon(Icons.filter_alt, color: Colors.green,)
