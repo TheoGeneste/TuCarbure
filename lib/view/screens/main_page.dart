@@ -68,14 +68,10 @@ class _MainPageState extends State<MainPage> {
             ],
           )
       ),
-      body: Stack(children: <Widget>[_widget[_index],
-        Visibility(
-            visible: _index == 0,
-            child: SlidingUpPanel(
-              panel: Center(child: Text("This is the sliding Widget"),),
-            )
-        ),
-      ]),
+      body: Stack(
+          children: <Widget>[_widget[_index],
+      ]
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _index,
         showUnselectedLabels: false,

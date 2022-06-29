@@ -11,7 +11,6 @@ class FavorisData{
   }
 
   Future<Map<String, dynamic>?> getFavoris() async {
-    _init();
     String text = "";
     Map<String,dynamic>? decode = null;
     try {

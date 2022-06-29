@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:tu_carbure/view/screens/register.dart';
 
 import '../../data/login_data.dart';
 
@@ -69,6 +70,7 @@ class Login extends StatelessWidget {
                           padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                           child: ElevatedButton(
                             onPressed: () {
+                              Navigator.pushNamed(context, Register.routeNames);
                             },
                             style: ElevatedButton.styleFrom(
                               minimumSize: Size.fromHeight(40),
