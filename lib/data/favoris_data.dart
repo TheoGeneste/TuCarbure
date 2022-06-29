@@ -11,6 +11,7 @@ class FavorisData{
   }
 
   Future<Map<String, dynamic>?> getFavoris() async {
+    _init();
     String text = "";
     Map<String,dynamic>? decode = null;
     try {
@@ -24,7 +25,13 @@ class FavorisData{
     return decode;
   }
 
+  Future<void> addFavoris(nom, id) async {
+    var json = await FavorisData().getFavoris();
+    var map = {"name":nom, "id":id};
 
+    json?['results'][0]?.addEntries(map.entries);
+    writeFavoris(json.toString());
+  }
   
   _init(){
     writeFavoris("{\"results\":[{\"id\":\"1\", \"name\":\"Leclerc\"},{\"id\":\"2\", \"name\":\"Total\"},{\"id\":\"3\", \"name\":\"Total\"}]}");

@@ -62,7 +62,6 @@ class _FavorisState extends State<Favoris>{
     return json?["results"] as List;
   }
 
-
   void _removeFavoris(id) async {
     var json = await _getFavoris();
     json.removeWhere((item) => item['id'] == id);
