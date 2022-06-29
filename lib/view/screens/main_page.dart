@@ -3,7 +3,7 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:tu_carbure/view/screens/login.dart';
 import 'package:tu_carbure/view/screens/stationCreation.dart';
 import 'package:tu_carbure/view/screens/map.dart';
-import 'package:tu_carbure/view/screens/login.dart';
+import 'package:tu_carbure/view/screens/register.dart';
 
 import 'favoris.dart';
 
@@ -22,7 +22,7 @@ class _MainPageState extends State<MainPage> {
   final List<Widget> _widget = [
     const MyMap(),
     const Favoris(),
-    const Login(),
+    Register(),
   ];
 
 
