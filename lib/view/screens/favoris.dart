@@ -6,52 +6,49 @@ class Favoris extends StatelessWidget {
   const Favoris({Key? key}) : super(key: key);
 
   Future<List> getFavoris() async {
-    var plainjson = await FavorisData().getFavoris();
-    print(plainjson);
-    var films = plainjson[1] as List;
-    return films;
+    var json = await FavorisData().getFavoris();
+    return json?["results"] as List;
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(builder: (context, snapshot){
-      return SingleChildScrollView(
-          child:Center(
-              child: Column(children: <Widget>[
-                Text("Favoris", style:TextStyle(fontSize: 30)),
-                Container(
-                  margin: EdgeInsets.all(20),
-                  child: Table(
-                    defaultColumnWidth: FixedColumnWidth(120.0),
-                    border: TableBorder.all(
-                        color: Colors.black,
-                        style: BorderStyle.solid
-                    ),
-                    children: [
-                      TableRow(children: [
-                        Column(children:[Text('Station', style: TextStyle(fontSize: 20.0))]),
-                        Column(children:[Text('Favoris', style: TextStyle(fontSize: 20.0))]),
-                      ]),
-                      TableRow( children: [
-                        Column(children:[Text('Leclerc')]),
-                        Column(children:[ IconButton(icon: const Icon(Icons.star),
-                          onPressed: () {
-                          },
-                        )]),
-                      ]),
-                      TableRow( children: [
-                        Column(children:[Text('Carrefour')]),
-                        Column(children:[ IconButton(icon: const Icon(Icons.star),
-                          onPressed: () {
-                          },
-                        )]),
-                      ]),
+      print(snapshot.connectionState);
+      print(snapshot.data);
+
+      if(snapshot.connectionState == ConnectionState.done && snapshot.hasData){
+        final data = snapshot.data as List;
+        return ListView.builder(
+          itemBuilder: (BuildContext context, int index) {
+            return Container(
+                height: 20,
+                margin: EdgeInsets.symmetric(horizontal: 100),
+                child: InkWell(
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                          child : Text(data[index]['name'], textAlign: TextAlign.left,),
+                      ),
+                      Expanded(
+                        child: IconButton(
+                          icon: const Icon(Icons.star),
+                          onPressed: () {},
+
+                        ),
+                      )
                     ],
                   ),
-                ),
-              ])
-          )
-      );
+                )
+
+
+            );
+          },
+          itemCount: data.length,
+          padding: const EdgeInsets.all(8),
+        );
+      } else {
+        return Center(child: CircularProgressIndicator(),);
+      }
     }, future: getFavoris());
   }
 }

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
@@ -9,22 +10,22 @@ class FavorisData{
     await file.writeAsString(text);
   }
 
-  Future<String> getFavoris() async {
+  Future<Map<String, dynamic>?> getFavoris() async {
     String text = "";
+    Map<String,dynamic>? decode = null;
     try {
       final Directory directory = await getApplicationDocumentsDirectory();
       final File file = File('${directory.path}/favorites.json');
-      print('${directory.path}/favorites.json');
       text = await file.readAsString();
-      print(text);
+      decode = jsonDecode(text) as Map<String,dynamic>;
     } catch (e) {
       print("Couldn't read file");
     }
-    return text;
+    return decode;
   }
   
   _init(){
-    _write("{[{\"id\":\"1\", \"name\":\"Leclerc\"}]}");
+    _write("{\"results\":[{\"id\":\"1\", \"name\":\"Leclerc\"},{\"id\":\"2\", \"name\":\"Total\"}]}");
   }
 
 }
