@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:tu_carbure/view/screens/register.dart';
 
 import '../../data/login_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -102,12 +103,12 @@ class _LoginState extends State<Login>{
                         child: const Text('Se connecter'),
                       ),
                     ),
-
                     Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 32, vertical: 16),
+                      padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushNamed(context, Register.routeNames);
+                        },
                         style: ElevatedButton.styleFrom(
                           minimumSize: Size.fromHeight(40),
                         ),

@@ -7,6 +7,7 @@ import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:tu_carbure/view/viewmodels/stations_viewmodel.dart';
 
 class MyMap extends StatefulWidget {
@@ -49,7 +50,14 @@ class _MyMapState extends State<MyMap> {
               point: LatLng(element['adresse']['latitude'], element['adresse']['longitude']),
               width: 80,
               height: 80,
-              builder: (context) => Icon(Icons.local_gas_station, color: Colors.green,),
+              builder: (context) {
+                return IconButton(
+                  onPressed: () {
+                      print(element);
+                  },
+                  icon: Icon(Icons.local_gas_station, color: Colors.green,),
+                );
+              }
             ));
           });
           return Center(
@@ -74,10 +82,12 @@ class _MyMapState extends State<MyMap> {
                               markers: _markers as List<Marker>
                           ),
                           LocationMarkerLayerOptions(),
-
                         ],
 
                       )
+                  ),
+                  SlidingUpPanel(
+                      panel: Center(child: Text("This is the sliding Widget"),),
                   )
                 ],
               ),
