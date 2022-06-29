@@ -1,12 +1,17 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:tu_carbure/view/viewmodels/stations_viewmodel.dart';
 
 class MyMap extends StatefulWidget {
-  const MyMap({Key? key}) : super(key: key);
+  final int rangeValue;
+  MyMap({Key? key, required this.rangeValue}) : super(key: key);
 
   @override
   State<MyMap> createState() => _MyMapState();
@@ -14,13 +19,20 @@ class MyMap extends StatefulWidget {
 
 class _MyMapState extends State<MyMap> {
   late Position _currentPosition;
-  Future<Position> position = Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+  late LocationSettings locationSettings;
+
 
   @override
   Widget build(BuildContext context) {
+    setLocation();
+    StreamSubscription<Position> positionStream = Geolocator.getPositionStream(locationSettings: locationSettings).listen(
+      (Position? position) {
+        print(position == null ? 'Unknown' : '${position.latitude.toString()}, ${position.longitude.toString()}');
+      }
+    );
     List<Marker> _markers = [];
-    _getCurrentLocation();
     _determinePosition();
+    _getCurrentLocation();
      StationViewModel stationViewModel = context.read<StationViewModel>();
     _markers.add(Marker(
       point: LatLng(_currentPosition.latitude, _currentPosition.longitude),
@@ -47,6 +59,10 @@ class _MyMapState extends State<MyMap> {
                   Flexible(
                       child: FlutterMap(
                         options: MapOptions(
+                          plugins: [
+                            LocationMarkerPlugin(),
+                          ],
+                          maxZoom: 18.4,
                           center: LatLng(_currentPosition.latitude, _currentPosition.longitude),
                         ),
                         layers: [
@@ -57,7 +73,10 @@ class _MyMapState extends State<MyMap> {
                           MarkerLayerOptions(
                               markers: _markers as List<Marker>
                           ),
+                          LocationMarkerLayerOptions(),
+
                         ],
+
                       )
                   )
                 ],
@@ -68,8 +87,41 @@ class _MyMapState extends State<MyMap> {
           return CircularProgressIndicator();
         }
       },
-      future: stationViewModel.getStationInPerimetre(_currentPosition.longitude, _currentPosition.latitude, 100),
+      future: stationViewModel.getStationInPerimetre(_currentPosition.longitude, _currentPosition.latitude, widget.rangeValue),
     );
+  }
+
+  void setLocation(){
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      locationSettings = AndroidSettings(
+          accuracy: LocationAccuracy.high,
+          distanceFilter: 100,
+          forceLocationManager: true,
+          intervalDuration: const Duration(seconds: 10),
+          //(Optional) Set foreground notification config to keep the app alive
+          //when going to the background
+          foregroundNotificationConfig: const ForegroundNotificationConfig(
+            notificationText:
+            "Example app will continue to receive your location even when you aren't using it",
+            notificationTitle: "Running in Background",
+            enableWakeLock: true,
+          )
+      );
+    } else if (defaultTargetPlatform == TargetPlatform.iOS || defaultTargetPlatform == TargetPlatform.macOS) {
+      locationSettings = AppleSettings(
+        accuracy: LocationAccuracy.high,
+        activityType: ActivityType.fitness,
+        distanceFilter: 100,
+        pauseLocationUpdatesAutomatically: true,
+        // Only set to true if our app will be started up in the background.
+        showBackgroundLocationIndicator: false,
+      );
+    } else {
+      locationSettings = LocationSettings(
+        accuracy: LocationAccuracy.high,
+        distanceFilter: 100,
+      );
+    }
   }
 
   Future<Position> _determinePosition() async {
@@ -90,7 +142,6 @@ class _MyMapState extends State<MyMap> {
     }
 
     if (permission == LocationPermission.deniedForever) {
-      // Permissions are denied forever, handle appropriately.
       return Future.error(
           'Location permissions are permanently denied, we cannot request permissions.');
     }
@@ -98,11 +149,11 @@ class _MyMapState extends State<MyMap> {
     return await Geolocator.getCurrentPosition();
   }
 
-  _getCurrentLocation() {
-    Geolocator
+  _getCurrentLocation() async {
+    await Geolocator
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.best, forceAndroidLocationManager: true)
         .then((Position position) {
-      setState(() {
+      setState((){
         _currentPosition = position;
       });
     }).catchError((e) {
