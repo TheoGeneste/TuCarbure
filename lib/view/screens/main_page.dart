@@ -6,13 +6,12 @@ import 'package:tu_carbure/view/screens/stationCreation.dart';
 import 'package:tu_carbure/view/screens/map.dart';
 import 'package:tu_carbure/view/screens/login.dart';
 import 'package:tu_carbure/view/screens/Profile.dart';
+import 'package:tu_carbure/view/widgets/liste_carburant_filter.dart';
 
 import 'favoris.dart';
 
 class MainPage extends StatefulWidget {
   MainPage({Key? key}) : super(key: key);
-
-
 
   @override
   State<MainPage> createState() => _MainPageState();
@@ -22,6 +21,7 @@ class _MainPageState extends State<MainPage> {
   int _index = 0;
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int _Rangevalue = 20;
+
 
   late bool isAuthenticated = false;
 
@@ -41,10 +41,11 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
 
     print(isAuthenticated);
+    isAuthenticated = false;
     _widget[0] = MyMap(rangeValue: _Rangevalue);
-    _widget[2] = isAuthenticated ? Profile() : Login();
+//    _widget[2] = isAuthenticated ? Profile() : Login();
 
-    return  Scaffold(
+    return Scaffold(
         key: _scaffoldKey,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -142,6 +143,8 @@ class _MainPageState extends State<MainPage> {
                   style: TextStyle(fontSize: 15),
                 )
             ),
+            Padding(padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+              child:ListeCarburantFilter()),
             Padding(padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
                 child: ElevatedButton(
                   onPressed: () => setPerimetreValue(_Rangevalue),
