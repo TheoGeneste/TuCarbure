@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
 class FavorisData{
-  _write(String text) async {
+  writeFavoris(String text) async {
     final Directory directory = await getApplicationDocumentsDirectory();
     final File file = File('${directory.path}/favorites.json');
     await file.writeAsString(text);
@@ -23,9 +23,11 @@ class FavorisData{
     }
     return decode;
   }
+
+
   
   _init(){
-    _write("{\"results\":[{\"id\":\"1\", \"name\":\"Leclerc\"},{\"id\":\"2\", \"name\":\"Total\"}]}");
+    writeFavoris("{\"results\":[{\"id\":\"1\", \"name\":\"Leclerc\"},{\"id\":\"2\", \"name\":\"Total\"},{\"id\":\"3\", \"name\":\"Total\"}]}");
   }
 
 }

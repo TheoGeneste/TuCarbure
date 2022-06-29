@@ -19,8 +19,8 @@ class _MyMapState extends State<MyMap> {
   @override
   Widget build(BuildContext context) {
     List<Marker> _markers = [];
-    _getCurrentLocation();
     _determinePosition();
+    _getCurrentLocation();
      StationViewModel stationViewModel = context.read<StationViewModel>();
     _markers.add(Marker(
       point: LatLng(_currentPosition.latitude, _currentPosition.longitude),
@@ -88,7 +88,7 @@ class _MyMapState extends State<MyMap> {
         return Future.error('Location permissions are denied');
       }
     }
-
+    print(permission);
     if (permission == LocationPermission.deniedForever) {
       // Permissions are denied forever, handle appropriately.
       return Future.error(
