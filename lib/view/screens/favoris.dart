@@ -12,7 +12,6 @@ class Favoris extends StatefulWidget {
 }
 
 class _FavorisState extends State<Favoris>{
-
   late Future<List> _favoris = _getFavoris();
 
   @override
@@ -68,10 +67,9 @@ class _FavorisState extends State<Favoris>{
     var json = await _getFavoris();
     json.removeWhere((item) => item['id'] == id);
     FavorisData().writeFavoris("{\"results\":"+ jsonEncode(json).toString() +"}");
-    setState(){
+    setState((){
       _favoris = _getFavoris();
-    }
-    print(_getFavoris());
+    });
   }
 
 
