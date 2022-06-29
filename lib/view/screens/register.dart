@@ -8,8 +8,7 @@ class Register extends StatelessWidget {
   TextEditingController mailController = TextEditingController();
   TextEditingController telephoneController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  TextEditingController passwordConfirmationController =
-      TextEditingController();
+  TextEditingController passwordConfirmationController = TextEditingController();
 
   _register() {
     if (usernameController.text != "" &&

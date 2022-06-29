@@ -3,7 +3,7 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:tu_carbure/view/screens/login.dart';
 import 'package:tu_carbure/view/screens/stationCreation.dart';
 import 'package:tu_carbure/view/screens/map.dart';
-import 'package:tu_carbure/view/screens/register.dart';
+import 'package:tu_carbure/view/screens/login.dart';
 
 import 'favoris.dart';
 
@@ -19,10 +19,11 @@ class _MainPageState extends State<MainPage> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int _Rangevalue = 50;
 
+
   final List<Widget> _widget = [
     const MyMap(),
     const Favoris(),
-    Register(),
+    Login(),
   ];
 
 
@@ -71,8 +72,8 @@ class _MainPageState extends State<MainPage> {
             child: SlidingUpPanel(
               panel: Center(child: Text("This is the sliding Widget"),),
             ),
-            visible: _index == 0        ),
-
+            visible: _index == 0
+        ),
       ]),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _index,
