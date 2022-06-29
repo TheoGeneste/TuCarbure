@@ -19,10 +19,11 @@ class _MainPageState extends State<MainPage> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int _Rangevalue = 20;
 
+
   final List<Widget> _widget = [
     MyMap(rangeValue: 20),
     const Favoris(),
-    const Login(),
+    Login(),
   ];
 
 

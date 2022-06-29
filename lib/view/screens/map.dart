@@ -148,7 +148,7 @@ class _MyMapState extends State<MyMap> {
         return Future.error('Location permissions are denied');
       }
     }
-
+    print(permission);
     if (permission == LocationPermission.deniedForever) {
       return Future.error(
           'Location permissions are permanently denied, we cannot request permissions.');
