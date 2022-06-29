@@ -4,13 +4,14 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
 class FavorisData{
-  _write(String text) async {
+  writeFavoris(String text) async {
     final Directory directory = await getApplicationDocumentsDirectory();
     final File file = File('${directory.path}/favorites.json');
     await file.writeAsString(text);
   }
 
   Future<Map<String, dynamic>?> getFavoris() async {
+    _init();
     String text = "";
     Map<String,dynamic>? decode = null;
     try {
@@ -23,9 +24,17 @@ class FavorisData{
     }
     return decode;
   }
+
+  Future<void> addFavoris(nom, id) async {
+    var json = await FavorisData().getFavoris();
+    var map = {"name":nom, "id":id};
+
+    json?['results'][0]?.addEntries(map.entries);
+    writeFavoris(json.toString());
+  }
   
   _init(){
-    _write("{\"results\":[{\"id\":\"1\", \"name\":\"Leclerc\"},{\"id\":\"2\", \"name\":\"Total\"}]}");
+    writeFavoris("{\"results\":[{\"id\":\"1\", \"name\":\"Leclerc\"},{\"id\":\"2\", \"name\":\"Total\"},{\"id\":\"3\", \"name\":\"Total\"}]}");
   }
 
 }
