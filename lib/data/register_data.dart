@@ -9,7 +9,7 @@ class RegisterData{
     final body = {
       "email": email,
       "password": password,
-      "fullname": fullname,
+      "username": fullname,
       "enabled": true,
     };
     final jsonString = json.encode(body);
