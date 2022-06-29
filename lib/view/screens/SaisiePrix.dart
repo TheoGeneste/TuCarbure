@@ -1,43 +1,45 @@
 import 'package:flutter/material.dart';
 
-import '../viewmodels/carburant_viewmodel.dart';
+import '../../data/liste_carburant_data.dart';
+import 'package:tu_carbure/view/viewmodels/carburant_viewmodel.dart';
 
-class ListeCarburantFilter extends StatefulWidget {
-  const ListeCarburantFilter({Key? key}) : super(key: key);
+class SaisiePrix extends StatefulWidget {
+  const SaisiePrix({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _ListeCarburantFilterState();
+  State<StatefulWidget> createState() => _SaisiePrixState();
 }
 
-class _ListeCarburantFilterState extends State<ListeCarburantFilter>{
+class _SaisiePrixState extends State<SaisiePrix>{
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(builder: (context, snapshot){
       if(snapshot.connectionState == ConnectionState.done && snapshot.hasData){
-        print("snapshot.data");
-        print(snapshot.data);
         final data = snapshot.data as List;
+
         return ListView.builder(
           itemBuilder: (BuildContext context, int index) {
             return Container(
                 height: 60,
-                margin: EdgeInsets.symmetric(horizontal: 100),
+                margin: EdgeInsets.symmetric(horizontal: 20),
                 child: InkWell(
                   child: Row(
                     children: <Widget>[
                       Expanded(
                         child : Text(
                             data[index]['nom'] + " ("+ data[index]["code"] + ")",
-                            textAlign: TextAlign.center,
                             style:TextStyle(fontSize: 16)),
                       ),
                       Expanded(
-                        child: Checkbox(
-                          value: true,
-                          onChanged: (bool? value) {  },
-                        )
+                        child : TextFormField(
+                            decoration: const InputDecoration(
+                              border: UnderlineInputBorder(),
+                              labelText: 'Prix',
+                            ),
+                        ),
                       ),
+
                     ],
                   ),
                 )
@@ -49,7 +51,7 @@ class _ListeCarburantFilterState extends State<ListeCarburantFilter>{
       } else {
         return Center(child: CircularProgressIndicator(),);
       }
-    }, future: CarburantViewModel().getListeCarburant());
+    }, future: CarburantViewModel().getListeCarburant()); //Remplacer par le bon appel api avec lid de la station
   }
 
 }

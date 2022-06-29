@@ -8,6 +8,8 @@ import 'package:tu_carbure/view/screens/login.dart';
 import 'package:tu_carbure/view/screens/Profile.dart';
 import 'package:tu_carbure/view/widgets/liste_carburant_filter.dart';
 
+import '../../data/global_data.dart';
+import 'SaisiePrix.dart';
 import 'favoris.dart';
 
 class MainPage extends StatefulWidget {
@@ -21,9 +23,21 @@ class _MainPageState extends State<MainPage> {
   int _index = 0;
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int _Rangevalue = 20;
+  bool isLogged = false;
+  String username = "";
+  String token = "";
+  String email = "";
 
-
-  late bool isAuthenticated = false;
+  void _readGlobal() async{
+    var global =  await GlobalData().getGlobal();
+    username = global?["username"];
+    token = global?["token"];
+    email = global?["email"];
+    if(token != ""){
+      isLogged = true;
+    }
+    print(token);
+  }
 
   final List<Widget> _widget = [
     MyMap(rangeValue: 20),
@@ -39,11 +53,12 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-
-    print(isAuthenticated);
-    isAuthenticated = false;
+    _readGlobal();
+    print("ok");
+    print(isLogged);
+    isLogged = false;
     _widget[0] = MyMap(rangeValue: _Rangevalue);
-//    _widget[2] = isAuthenticated ? Profile() : Login();
+    _widget[2] = isLogged ? Profile() : Login();
 
     return Scaffold(
         key: _scaffoldKey,
