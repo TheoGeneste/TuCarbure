@@ -17,10 +17,10 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   int _index = 0;
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  int _Rangevalue = 50;
+  int _Rangevalue = 20;
 
   final List<Widget> _widget = [
-    const MyMap(),
+    MyMap(rangeValue: 20),
     const Favoris(),
     const Login(),
   ];
@@ -34,6 +34,7 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+    _widget[0] = MyMap(rangeValue: _Rangevalue);
     return  Scaffold(
         key: _scaffoldKey,
       resizeToAvoidBottomInset: false,
@@ -71,8 +72,8 @@ class _MainPageState extends State<MainPage> {
             child: SlidingUpPanel(
               panel: Center(child: Text("This is the sliding Widget"),),
             ),
-            visible: _index == 0        ),
-
+            visible: _index == 0
+        ),
       ]),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _index,
@@ -138,8 +139,7 @@ class _MainPageState extends State<MainPage> {
             ),
             Padding(padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
                 child: ElevatedButton(
-                  onPressed: () {
-                  },
+                  onPressed: () => setPerimetreValue(_Rangevalue),
                   style: ElevatedButton.styleFrom(
                     minimumSize: Size.fromHeight(40),
                   ),
@@ -150,6 +150,11 @@ class _MainPageState extends State<MainPage> {
         ),
       )
     );
+  }
+
+  void setPerimetreValue(rangeValue){
+    setState((){
+    });
   }
 }
 
