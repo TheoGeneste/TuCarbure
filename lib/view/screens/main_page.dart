@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:tu_carbure/view/screens/login.dart';
 import 'package:tu_carbure/view/screens/stationCreation.dart';
 import 'package:tu_carbure/view/screens/map.dart';
 import 'package:tu_carbure/view/screens/login.dart';
+import 'package:tu_carbure/view/screens/Profile.dart';
 
 import 'favoris.dart';
 
 class MainPage extends StatefulWidget {
-  const MainPage({Key? key}) : super(key: key);
+  MainPage({Key? key}) : super(key: key);
+
+
 
   @override
   State<MainPage> createState() => _MainPageState();
@@ -19,13 +23,13 @@ class _MainPageState extends State<MainPage> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int _Rangevalue = 20;
 
+  late bool isAuthenticated = false;
 
   final List<Widget> _widget = [
     MyMap(rangeValue: 20),
     const Favoris(),
     Login(),
   ];
-
 
   void _changePage(int index){
     setState((){
@@ -35,7 +39,11 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    print(isAuthenticated);
     _widget[0] = MyMap(rangeValue: _Rangevalue);
+    _widget[2] = isAuthenticated ? Profile() : Login();
+
     return  Scaffold(
         key: _scaffoldKey,
       resizeToAvoidBottomInset: false,
