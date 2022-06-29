@@ -43,44 +43,40 @@ class _MainPageState extends State<MainPage> {
         backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
         actions: <Widget>[Container()],
-        title: new Row(
+        title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Visibility(
+                visible: _index == 0,
                 child: IconButton(
                   icon: const Icon(Icons.filter_alt, color: Colors.green),
                   onPressed: (){
                     _scaffoldKey.currentState?.openDrawer();
                   },
-                ),
-                visible: _index == 0
+                )
               ),
               Image.asset("assets/images/TuCarburesBanner.png", width: 200, height: 200),
               Visibility(
+                visible: _index == 0,
                 child: IconButton(
                   icon: const Icon(Icons.add,color: Colors.green),
                   onPressed: () {
                     Navigator.pushNamed(context, StationCreation.routeNames);
                   },
-                ),
-                visible: _index == 0
+                )
               ),
             ],
           )
       ),
-      body: Stack(children: <Widget>[_widget[_index],
-        Visibility(
-            child: SlidingUpPanel(
-              panel: Center(child: Text("This is the sliding Widget"),),
-            ),
-            visible: _index == 0
-        ),
-      ]),
+      body: Stack(
+          children: <Widget>[_widget[_index],
+      ]
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _index,
         showUnselectedLabels: false,
         onTap: _changePage,
-        items: [
+        items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.map,),
             label: 'Map',
@@ -99,14 +95,14 @@ class _MainPageState extends State<MainPage> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            Padding(padding: EdgeInsets.symmetric(vertical: 20)),
-            Padding(padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+            const Padding(padding: EdgeInsets.symmetric(vertical: 20)),
+            const Padding(padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                 child:Text(
                   "Filtres",
                   style: TextStyle(fontSize: 30),
                 )
             ),
-            Padding(padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+            const Padding(padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
                 child:Text(
                   "Distance maximale",
                   style: TextStyle(fontSize: 15),
@@ -132,7 +128,7 @@ class _MainPageState extends State<MainPage> {
                 },
               ),
             ),
-            Padding(padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+            const Padding(padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
                 child:Text(
                   "Type de carburant",
                   style: TextStyle(fontSize: 15),
