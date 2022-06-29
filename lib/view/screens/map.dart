@@ -49,7 +49,16 @@ class _MyMapState extends State<MyMap> {
               point: LatLng(element['adresse']['latitude'], element['adresse']['longitude']),
               width: 80,
               height: 80,
-              builder: (context) => Icon(Icons.local_gas_station, color: Colors.green,),
+              builder: (context) {
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      print(element);
+                    });
+                  },
+                  child: Icon(Icons.local_gas_station, color: Colors.green,),
+                );
+              }
             ));
           });
           return Center(
@@ -74,7 +83,6 @@ class _MyMapState extends State<MyMap> {
                               markers: _markers as List<Marker>
                           ),
                           LocationMarkerLayerOptions(),
-
                         ],
 
                       )
