@@ -42,7 +42,7 @@ class _MainPageState extends State<MainPage> {
   }
 
   final List<Widget> _widget = [
-    MyMap(rangeValue: 20),
+    MyMap(rangeValue: 20, tableauCarburant: {}, ),
     const Favoris(),
     Login(),
   ];
@@ -57,7 +57,7 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     _readGlobal();
-    _widget[0] = MyMap(rangeValue: _Rangevalue);
+    _widget[0] = MyMap(rangeValue: _Rangevalue, tableauCarburant: _tableauCarburantChecked);
     _widget[2] = isLogged ? Profile() : Login();
 
     return Scaffold(

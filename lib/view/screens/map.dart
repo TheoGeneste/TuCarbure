@@ -15,7 +15,8 @@ import 'package:tu_carbure/view/viewmodels/stations_viewmodel.dart';
 
 class MyMap extends StatefulWidget {
   final int rangeValue;
-  MyMap({Key? key, required this.rangeValue}) : super(key: key);
+  final Map<String, bool> tableauCarburant;
+  MyMap({Key? key, required this.rangeValue, required this.tableauCarburant}) : super(key: key);
 
   @override
   State<MyMap> createState() => _MyMapState();
@@ -25,11 +26,11 @@ class _MyMapState extends State<MyMap> {
   late LocationSettings locationSettings;
   var _stationSelectionne = {};
   late Position _currentPosition;
-  List<Marker> _markers = [];
+
 
   @override
   Widget build(BuildContext context) {
-
+    List<Marker> _markers = [];
     StationViewModel stationViewModel = context.read<StationViewModel>();
 
     return FutureBuilder(
@@ -108,7 +109,7 @@ class _MyMapState extends State<MyMap> {
                 );
               }
             },
-            future: stationViewModel.getStationInPerimetre(_currentPosition.longitude, _currentPosition.latitude, widget.rangeValue),
+            future: stationViewModel.getStationInPerimetre(_currentPosition.longitude, _currentPosition.latitude, widget.rangeValue, widget.tableauCarburant),
           );
         }else{
           return FlutterMap(
