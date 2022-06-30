@@ -6,13 +6,14 @@ import 'package:tu_carbure/view/screens/stationCreation.dart';
 import 'package:tu_carbure/view/screens/map.dart';
 import 'package:tu_carbure/view/screens/login.dart';
 import 'package:tu_carbure/view/screens/Profile.dart';
+import 'package:tu_carbure/view/widgets/liste_carburant_filter.dart';
 
+import '../../data/global_data.dart';
+import 'SaisiePrix.dart';
 import 'favoris.dart';
 
 class MainPage extends StatefulWidget {
   MainPage({Key? key}) : super(key: key);
-
-
 
   @override
   State<MainPage> createState() => _MainPageState();
@@ -22,8 +23,19 @@ class _MainPageState extends State<MainPage> {
   int _index = 0;
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int _Rangevalue = 20;
+  bool isLogged = false;
+  String username = "";
+  String token = "";
+  String email = "";
 
-  late bool isAuthenticated = false;
+  void _readGlobal() async{
+    var global =  await GlobalData().getGlobal();
+    username = global?["username"];
+    token = global?["token"];
+    email = global?["email"];
+    isLogged = global?["isLogged"];
+    print(token);
+  }
 
   final List<Widget> _widget = [
     MyMap(rangeValue: 20),
@@ -32,19 +44,21 @@ class _MainPageState extends State<MainPage> {
   ];
 
   void _changePage(int index){
+    _readGlobal();
     setState((){
       _index = index;
     });
+
   }
 
   @override
   Widget build(BuildContext context) {
+    _readGlobal();
 
-    print(isAuthenticated);
     _widget[0] = MyMap(rangeValue: _Rangevalue);
-    _widget[2] = isAuthenticated ? Profile() : Login();
+    _widget[2] = isLogged ? Profile() : Login();
 
-    return  Scaffold(
+    return Scaffold(
         key: _scaffoldKey,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -142,6 +156,8 @@ class _MainPageState extends State<MainPage> {
                   style: TextStyle(fontSize: 15),
                 )
             ),
+            Padding(padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+              child:ListeCarburantFilter()),
             Padding(padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
                 child: ElevatedButton(
                   onPressed: () => setPerimetreValue(_Rangevalue),

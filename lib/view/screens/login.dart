@@ -1,8 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:tu_carbure/view/screens/main_page.dart';
 import 'package:tu_carbure/view/screens/register.dart';
 
+import '../../data/global_data.dart';
 import '../../data/login_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -17,6 +19,7 @@ class _LoginState extends State<Login>{
   TextEditingController mailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
+
   _login() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -28,17 +31,10 @@ class _LoginState extends State<Login>{
       SharedPreferences.setMockInitialValues({});
       //Si se souvenir de moi alors :
       //test@gmail.com:password : Test123
-      await prefs.setString("token", "TEST");
-      await prefs.setString("username", r["username"]);
-      await prefs.setString("email", r["email"]);
-      await prefs.setBool("isAuthenticated", true);
+      GlobalData().saveLogin(r["username"],r["email"],r["token"],true);
+      print(r["token"]);
     }
-    print(prefs.getString("token"));
-    setState(() {
-      //isAuthenticated = prefs.getBool("isAuthenticated");
-    });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -96,6 +92,9 @@ class _LoginState extends State<Login>{
                       child: ElevatedButton(
                         onPressed: () {
                           _login();
+
+                          //TODO : Verif connexion reussi
+                          Navigator.push(context, MaterialPageRoute(builder: (contex) => MainPage()));
                         },
                         style: ElevatedButton.styleFrom(
                           minimumSize: Size.fromHeight(40),

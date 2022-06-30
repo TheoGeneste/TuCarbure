@@ -20,19 +20,13 @@ class MyMap extends StatefulWidget {
 }
 
 class _MyMapState extends State<MyMap> {
-  late Position _currentPosition;
   late LocationSettings locationSettings;
   var _stationSelectionne = {};
-
+  late Position _currentPosition;
 
   @override
   Widget build(BuildContext context) {
-    setLocation();
-    StreamSubscription<Position> positionStream = Geolocator.getPositionStream(locationSettings: locationSettings).listen(
-          (Position? position) {
-          _currentPosition = position!;
-        }
-    );
+    _determinePosition().then((Position position) => _currentPosition = position);
     List<Marker> _markers = [];
     StationViewModel stationViewModel = context.read<StationViewModel>();
     _markers.add(Marker(
@@ -81,7 +75,7 @@ class _MyMapState extends State<MyMap> {
                           MarkerLayerOptions(
                               markers: _markers as List<Marker>
                           ),
-                          LocationMarkerLayerOptions(),
+                          //LocationMarkerLayerOptions(),
                         ],
 
                       )
@@ -296,7 +290,6 @@ class _MyMapState extends State<MyMap> {
       return Future.error(
           'Location permissions are permanently denied, we cannot request permissions.');
     }
-
     return await Geolocator.getCurrentPosition();
   }
 
@@ -305,7 +298,7 @@ class _MyMapState extends State<MyMap> {
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.best, forceAndroidLocationManager: true)
         .then((Position position) {
       setState((){
-        _currentPosition = position;
+        //_currentPosition = position;
       });
     }).catchError((e) {
       print(e);
