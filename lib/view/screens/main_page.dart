@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:tu_carbure/view/screens/login.dart';
@@ -9,6 +10,7 @@ import 'package:tu_carbure/view/screens/Profile.dart';
 import 'package:tu_carbure/view/widgets/liste_carburant_filter.dart';
 
 import '../../data/global_data.dart';
+import '../viewmodels/carburant_viewmodel.dart';
 import 'SaisiePrix.dart';
 import 'favoris.dart';
 
@@ -27,6 +29,8 @@ class _MainPageState extends State<MainPage> {
   String username = "";
   String token = "";
   String email = "";
+  Map<String, bool> _tableauCarburantChecked = {"E85" : false};
+
 
   void _readGlobal() async{
     var global =  await GlobalData().getGlobal();
@@ -54,12 +58,11 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     _readGlobal();
-
     _widget[0] = MyMap(rangeValue: _Rangevalue);
     _widget[2] = isLogged ? Profile() : Login();
 
     return Scaffold(
-        key: _scaffoldKey,
+      key: _scaffoldKey,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -156,11 +159,57 @@ class _MainPageState extends State<MainPage> {
                   style: TextStyle(fontSize: 15),
                 )
             ),
-            Padding(padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-              child:ListeCarburantFilter()),
+            // Padding(padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+            //   child:ListeCarburantFilter()),
+            FutureBuilder(builder: (context, snapshot){
+              if(snapshot.connectionState == ConnectionState.done && snapshot.hasData){
+                final data = snapshot.data as List;
+                return ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemBuilder: (BuildContext context, int index) {
+                    var code = data[index]["code"];
+                    _tableauCarburantChecked.putIfAbsent(code, () => false);
+
+                    return Container(
+                        child: InkWell(
+                          child: Row(
+                            children: <Widget>[
+                              Expanded(
+                                child : Text(
+                                    data[index]['nom'] + " ("+ data[index]["code"] + ")",
+                                    style:TextStyle(fontSize: 14)),
+                                ),
+                                Expanded(
+                                  flex: 2,
+                                  child: Checkbox(
+                                    value: _tableauCarburantChecked[code],
+                                    onChanged: (bool? value) {
+                                      setState((){
+                                        _tableauCarburantChecked[code] = value!;
+                                    });
+                                  },
+                                )
+                              ),
+                            ],
+                          ),
+                        )
+                    );
+                  },
+                  itemCount: data.length,
+                  padding: const EdgeInsets.all(8),
+                );
+                } else {
+                  return const Center(child: CircularProgressIndicator(),);
+                }
+              }, future: CarburantViewModel().getListeCarburant()
+            ),
             Padding(padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
                 child: ElevatedButton(
-                  onPressed: () => setPerimetreValue(_Rangevalue),
+                  onPressed: () => {
+                    setPerimetreValue(_Rangevalue),
+                    print(_tableauCarburantChecked),
+                  },
                   style: ElevatedButton.styleFrom(
                     minimumSize: Size.fromHeight(40),
                   ),
