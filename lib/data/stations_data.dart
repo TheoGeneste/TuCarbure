@@ -12,7 +12,6 @@ class StationsData{
        }
      });
     var url = Uri.parse('http://theslipe.myddns.me:8080/stations?latitude=$latitude&longitude=$longitude&distance=$perimetre'+carburants);
-    print(url);
     var stations = await http.get(url);
     return stations.body;
   }
