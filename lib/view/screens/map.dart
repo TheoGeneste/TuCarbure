@@ -1,5 +1,8 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
+import 'dart:js_util';
+import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
@@ -7,8 +10,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:http/http.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:tu_carbure/data/favoris_data.dart';
 import 'package:tu_carbure/view/viewmodels/stations_viewmodel.dart';
@@ -30,104 +35,120 @@ class _MyMapState extends State<MyMap> {
 
   @override
   Widget build(BuildContext context) {
+    var fav;
     List<Marker> _markers = [];
     StationViewModel stationViewModel = context.read<StationViewModel>();
-
     return FutureBuilder(
-      builder: (context, snapshot){
-        if(snapshot.connectionState == ConnectionState.done && snapshot.hasData){
-          final data = snapshot.data;
-          _markers.add(Marker(
-            point: LatLng(_currentPosition.latitude, _currentPosition.longitude),
-            width: 80,
-            height: 80,
-            builder: (context) => Icon(Icons.location_on, color: Colors.red,),
-          ));
-
-          return FutureBuilder(
-            builder: (context, snapshot){
-              if(snapshot.connectionState == ConnectionState.done && snapshot.hasData){
-                final data = snapshot.data as List;
-                data.forEach((element) {
+        builder: (context, snapshot){
+          if(snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
+            if(snapshot.data is SharedPreferences){
+              print(snapshot.data);
+            }
+            return FutureBuilder(
+              builder: (context, snapshot){
+                if(snapshot.connectionState == ConnectionState.done && snapshot.hasData){
+                  final data = snapshot.data;
                   _markers.add(Marker(
-                      point: LatLng(element['adresse']['latitude'], element['adresse']['longitude']),
-                      width: 80,
-                      height: 80,
-                      builder: (context) {
-                        return IconButton(
-                          onPressed: () {
-                            _setStationSelectionne(element);
-                          },
-                          icon: Icon(Icons.local_gas_station, color: Colors.green,),
+                    point: LatLng(_currentPosition.latitude, _currentPosition.longitude),
+                    width: 80,
+                    height: 80,
+                    builder: (context) => Icon(Icons.location_on, color: Colors.red,),
+                  ));
+
+                  return FutureBuilder(
+                    builder: (context, snapshot){
+                      if(snapshot.connectionState == ConnectionState.done && snapshot.hasData){
+                        final data = snapshot.data as List;
+                        data.forEach((element) {
+                          _markers.add(Marker(
+                              point: LatLng(element['adresse']['latitude'], element['adresse']['longitude']),
+                              width: 80,
+                              height: 80,
+                              builder: (context) {
+                                return IconButton(
+                                  onPressed: () {
+                                    _setStationSelectionne(element);
+                                  },
+                                  icon: Icon(Icons.local_gas_station, color: Colors.green,),
+                                );
+                              }
+                          ));
+                        });
+                        return Center(
+                          child: Container(
+                            child: Column(
+                              children: [
+                                Flexible(
+                                    child: FlutterMap(
+                                      options: MapOptions(
+                                        plugins: [
+                                          LocationMarkerPlugin(),
+                                        ],
+                                        maxZoom: 18.4,
+                                        center: LatLng(_currentPosition.latitude, _currentPosition.longitude),
+                                      ),
+                                      layers: [
+                                        TileLayerOptions(
+                                          urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                                          subdomains: ['a', 'b', 'c'],
+                                        ),
+                                        MarkerLayerOptions(
+                                            markers: _markers as List<Marker>
+                                        ),
+                                        //LocationMarkerLayerOptions(),
+                                      ],
+
+                                    )
+                                ),
+                                SlidingUpPanel(
+                                  body: Center(child: _stationSelectionne['marque'] != null ? Text(_stationSelectionne['marque']['nom']) : Text("Pas de station selectionne"),),
+                                  panelBuilder: (sc) => _panel(sc),
+                                )
+                              ],
+                            ),
+                          ),
+                        );
+                      }else{
+                        return FlutterMap(
+                          options: MapOptions(
+                            plugins: [
+                              LocationMarkerPlugin(),
+                            ],
+                            maxZoom: 18.4,
+                            center: LatLng(0, 0),
+                          ),
                         );
                       }
-                  ));
-                });
-                return Center(
-                  child: Container(
-                    child: Column(
-                      children: [
-                        Flexible(
-                            child: FlutterMap(
-                              options: MapOptions(
-                                plugins: [
-                                  LocationMarkerPlugin(),
-                                ],
-                                maxZoom: 18.4,
-                                center: LatLng(_currentPosition.latitude, _currentPosition.longitude),
-                              ),
-                              layers: [
-                                TileLayerOptions(
-                                  urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                                  subdomains: ['a', 'b', 'c'],
-                                ),
-                                MarkerLayerOptions(
-                                    markers: _markers as List<Marker>
-                                ),
-                                //LocationMarkerLayerOptions(),
-                              ],
-
-                            )
-                        ),
-                        SlidingUpPanel(
-                          body: Center(child: _stationSelectionne['marque'] != null ? Text(_stationSelectionne['marque']['nom']) : Text("Pas de station selectionne"),),
-                          panelBuilder: (sc) => _panel(sc),
-                        )
+                    },
+                    future: stationViewModel.getStationInPerimetre(_currentPosition.longitude, _currentPosition.latitude, widget.rangeValue, widget.tableauCarburant),
+                  );
+                }else{
+                  return FlutterMap(
+                    options: MapOptions(
+                      plugins: [
+                        LocationMarkerPlugin(),
                       ],
+                      maxZoom: 18.4,
+                      center: LatLng(0, 0),
                     ),
-                  ),
-                );
-              }else{
-                return FlutterMap(
-                  options: MapOptions(
-                    plugins: [
-                      LocationMarkerPlugin(),
-                    ],
-                    maxZoom: 18.4,
-                    center: LatLng(0, 0),
-                  ),
-                );
-              }
-            },
-            future: stationViewModel.getStationInPerimetre(_currentPosition.longitude, _currentPosition.latitude, widget.rangeValue, widget.tableauCarburant),
-          );
-        }else{
-          return FlutterMap(
-            options: MapOptions(
-              plugins: [
-                LocationMarkerPlugin(),
-              ],
-              maxZoom: 18.4,
-              center: LatLng(0, 0),
-            ),
-          );
-        }
-      },
-      future: _determinePosition().then((Position position) => _currentPosition = position),
+                  );
+                }
+              },
+              future: _determinePosition().then((Position position) => _currentPosition = position),
+            );
+          }else{
+            return CircularProgressIndicator();
+          }
+        },
+        future:getPrefs(),
     );
-
-
   }
+
+  Future<SharedPreferences> getPrefs() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs;
+  }
+
   Widget _button(String label, IconData icon, Color color) {
     return Column(
       children: <Widget>[
@@ -199,6 +220,7 @@ class _MyMapState extends State<MyMap> {
                 IconButton(
                   icon: const Icon(Icons.star_outline),
                   onPressed: () {
+                    print(_stationSelectionne);
                     FavorisData().addFavoris(_stationSelectionne['marque']['nom'], _stationSelectionne['id']);
                   },
                 ),

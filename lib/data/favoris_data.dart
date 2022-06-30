@@ -14,6 +14,10 @@ class FavorisData{
   Future<void> addFavoris(nom, id) async {
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    if(prefs.containsKey('fav') == false){
+      print("oui");
+      prefs.setString('fav', "[]");
+    }
 
     List<dynamic> list = json.decode(prefs.get('fav').toString());
 
