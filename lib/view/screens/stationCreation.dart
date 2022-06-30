@@ -34,7 +34,7 @@ class StationCreation extends StatelessWidget {
                         elevation: 16,
                         decoration: const InputDecoration(
                           border: UnderlineInputBorder(),
-                          labelText: 'Adresse de la station',
+                          labelText: 'Marque',
                         ),
                         onChanged: (String? newValue) {
 
@@ -53,11 +53,11 @@ class StationCreation extends StatelessWidget {
                       child: TextFormField(
                         decoration: const InputDecoration(
                           border: UnderlineInputBorder(),
-                          labelText: 'Distance Maximale',
+                          labelText: 'Adresse',
                         ),
                       ),
                     ),
-                    Padding(
+                    /**Padding(
                       padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                       child: Table(
                         defaultColumnWidth: FixedColumnWidth(120.0),
@@ -72,7 +72,7 @@ class StationCreation extends StatelessWidget {
                           ]),
                         ],
                       ),
-                    ),
+                    ),**/
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                       child: ElevatedButton(
