@@ -12,28 +12,35 @@ class FavorisData{
 
   Future<Map<String, dynamic>?> getFavoris() async {
     String text = "";
-    Map<String,dynamic>? decode = null;
+    Map<String,dynamic>? decode;
     try {
       final Directory directory = await getApplicationDocumentsDirectory();
       final File file = File('${directory.path}/favorites.json');
       text = await file.readAsString();
-      decode = jsonDecode(text) as Map<String,dynamic>;
-    } catch (e) {
+      print(text);
+    } catch(e) {
       print("Couldn't read file");
+    }
+
+    try {
+      decode = jsonDecode(text) as Map<String,dynamic>;
+    } catch(e) {
+      print("Couldn't decode json");
+      _init();
     }
     return decode;
   }
 
   Future<void> addFavoris(nom, id) async {
     var json = await FavorisData().getFavoris();
-    var map = {"name":nom, "id":id};
 
-    json?['results'][0]?.addEntries(map.entries);
-    writeFavoris(json.toString());
+    json?["results"].add({"nom":"test", "id":5});
+    await writeFavoris(json.toString());
+    await FavorisData().getFavoris();
   }
   
-  _init(){
-    writeFavoris("{\"results\":[{\"id\":\"1\", \"name\":\"Leclerc\"},{\"id\":\"2\", \"name\":\"Total\"},{\"id\":\"3\", \"name\":\"Total\"}]}");
+  _init() {
+    writeFavoris("{\"results\":[]}");
   }
 
 }

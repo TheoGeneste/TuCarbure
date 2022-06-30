@@ -48,7 +48,6 @@ class _MainPageState extends State<MainPage> {
     setState((){
       _index = index;
     });
-
   }
 
   @override
