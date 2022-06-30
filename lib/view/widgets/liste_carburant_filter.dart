@@ -4,12 +4,12 @@ import '../viewmodels/carburant_viewmodel.dart';
 
 class ListeCarburantFilter extends StatefulWidget {
   const ListeCarburantFilter({Key? key}) : super(key: key);
-
   @override
   State<StatefulWidget> createState() => _ListeCarburantFilterState();
 }
 
 class _ListeCarburantFilterState extends State<ListeCarburantFilter>{
+  var _tableauCarburantChecked = [];
 
   @override
   Widget build(BuildContext context) {
@@ -17,24 +17,30 @@ class _ListeCarburantFilterState extends State<ListeCarburantFilter>{
       if(snapshot.connectionState == ConnectionState.done && snapshot.hasData){
         final data = snapshot.data as List;
         return ListView.builder(
+          scrollDirection: Axis.vertical,
+          shrinkWrap: true,
           itemBuilder: (BuildContext context, int index) {
-            return Container(
-                height: 60,
-                margin: EdgeInsets.symmetric(horizontal: 100),
+            var code = data[index]["code"];
+            _tableauCarburantChecked.add({code : false});
+             return Container(
                 child: InkWell(
                   child: Row(
                     children: <Widget>[
                       Expanded(
                         child : Text(
                             data[index]['nom'] + " ("+ data[index]["code"] + ")",
-                            textAlign: TextAlign.center,
-                            style:TextStyle(fontSize: 16)),
+                            style:TextStyle(fontSize: 14)),
                       ),
                       Expanded(
-                        child: Checkbox(
-                          value: true,
-                          onChanged: (bool? value) {  },
-                        )
+                        flex: 2,
+                          child: Checkbox(
+                            value: _tableauCarburantChecked[index][code],
+                            onChanged: (bool? value) {
+                              setState((){
+                                _tableauCarburantChecked[index][code] = value;
+                              });
+                            },
+                          )
                       ),
                     ],
                   ),
@@ -45,9 +51,14 @@ class _ListeCarburantFilterState extends State<ListeCarburantFilter>{
           padding: const EdgeInsets.all(8),
         );
       } else {
-        return const Center(child: CircularProgressIndicator(),);
-      }
+          return const Center(child: CircularProgressIndicator(),);
+        }
     }, future: CarburantViewModel().getListeCarburant());
   }
 
+
+
 }
+
+
+
