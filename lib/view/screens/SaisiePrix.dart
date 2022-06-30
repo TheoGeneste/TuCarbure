@@ -4,6 +4,8 @@ import '../../data/liste_carburant_data.dart';
 import 'package:tu_carbure/view/viewmodels/carburant_viewmodel.dart';
 
 class SaisiePrix extends StatefulWidget {
+  static const routeNames = "/saisie-prix";
+
   const SaisiePrix({Key? key}) : super(key: key);
 
   @override

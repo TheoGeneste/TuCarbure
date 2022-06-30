@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tu_carbure/view/screens/SaisiePrix.dart';
 import 'package:tu_carbure/view/screens/main_page.dart';
 import 'package:tu_carbure/view/screens/register.dart';
 import 'package:tu_carbure/view/screens/stationCreation.dart';
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/creation-station': (context) => StationCreation(),
         '/register': (context) => Register(),
+        '/saisie-prix':(context) => SaisiePrix(),
       },
     );
   }

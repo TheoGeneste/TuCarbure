@@ -57,7 +57,7 @@ class StationsData{
 
           listeCarburantDetails.add({
             "nom": carburants[index]['nom'],
-            "codeEuropeen": carburants[index]['codeEuropeen'],
+            "codeEuropeen": carburants[index]['code'],
             "disponible": true,
             "prix": i.text
           });

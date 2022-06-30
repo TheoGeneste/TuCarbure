@@ -1,17 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:tu_carbure/view/screens/login.dart';
 import 'package:tu_carbure/view/screens/stationCreation.dart';
 import 'package:tu_carbure/view/screens/map.dart';
-import 'package:tu_carbure/view/screens/login.dart';
 import 'package:tu_carbure/view/screens/Profile.dart';
-import 'package:tu_carbure/view/widgets/liste_carburant_filter.dart';
 
 import '../../data/global_data.dart';
 import '../viewmodels/carburant_viewmodel.dart';
-import 'SaisiePrix.dart';
 import 'favoris.dart';
 
 class MainPage extends StatefulWidget {
@@ -59,6 +53,7 @@ class _MainPageState extends State<MainPage> {
     _readGlobal();
     _widget[0] = MyMap(rangeValue: _Rangevalue, tableauCarburant: _tableauCarburantChecked);
     _widget[2] = isLogged ? Profile() : Login();
+    print(isLogged);
 
     return Scaffold(
       key: _scaffoldKey,
@@ -81,7 +76,7 @@ class _MainPageState extends State<MainPage> {
               ),
               Image.asset("assets/images/TuCarburesBanner.png", width: 200, height: 200),
               Visibility(
-                visible: _index == 0,
+                visible: _index == 0 && isLogged,
                 child: IconButton(
                   icon: const Icon(Icons.add,color: Colors.green),
                   onPressed: () {

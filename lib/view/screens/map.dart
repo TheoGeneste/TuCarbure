@@ -1,21 +1,16 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
-import 'dart:js_util';
-import 'dart:math';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:http/http.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:tu_carbure/data/favoris_data.dart';
+import 'package:tu_carbure/view/screens/SaisiePrix.dart';
 import 'package:tu_carbure/view/viewmodels/stations_viewmodel.dart';
 
 class MyMap extends StatefulWidget {
@@ -227,7 +222,9 @@ class _MyMapState extends State<MyMap> {
                 IconButton(
                   icon: const Icon(Icons.edit),
                   onPressed: () {
+                    Navigator.pushNamed(context, SaisiePrix.routeNames);
 
+                    //TODO EDIT PRIX
                   },
                 ),
               ],
