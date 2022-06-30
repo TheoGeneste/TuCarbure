@@ -1,17 +1,34 @@
-# tu_carbure
+# TuCarbure Application mobile flutter
 
-Projetc Valarap Flutter/NoSQL/Spring
+## Prérequis
 
-## Getting Started
+- SDK Flutter
+- AndroidStudio
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
+## Installation
+- instalation du SDK flutter :
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+```bash
+https://docs.flutter.dev/get-started/install
+```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-# TuCarbure
+- installation Android studio
+
+```bash
+https://developer.android.com/studio?hl=fr&gclid=CjwKCAjwk_WVBhBZEiwAUHQCmU4BGD9l0ARaUFm5KVIvE3zWx5Yz_8pC0XQMNwXBgCvM2UxGdrSZORoCEWIQAvD_BwE&gclsrc=aw.ds
+```
+
+- Récupérer le projet :
+
+```bash
+git clone https://github.com/TheoGeneste/TuCarbure.git
+```
+
+### Flutter
+
+- Lancer Android studio
+
+- créer un AVD (emulation d'un téléphone)
+
+- lancer l'application
