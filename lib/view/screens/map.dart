@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
@@ -24,77 +25,107 @@ class _MyMapState extends State<MyMap> {
   late LocationSettings locationSettings;
   var _stationSelectionne = {};
   late Position _currentPosition;
+  List<Marker> _markers = [];
 
   @override
   Widget build(BuildContext context) {
-    _determinePosition().then((Position position) => _currentPosition = position);
-    List<Marker> _markers = [];
+
     StationViewModel stationViewModel = context.read<StationViewModel>();
-    _markers.add(Marker(
-      point: LatLng(_currentPosition.latitude, _currentPosition.longitude),
-      width: 80,
-      height: 80,
-      builder: (context) => Icon(Icons.location_on, color: Colors.red,),
-    ));
+
     return FutureBuilder(
       builder: (context, snapshot){
         if(snapshot.connectionState == ConnectionState.done && snapshot.hasData){
-          final data = snapshot.data as List;
-          data.forEach((element) {
-            _markers.add(Marker(
-                point: LatLng(element['adresse']['latitude'], element['adresse']['longitude']),
-                width: 80,
-                height: 80,
-                builder: (context) {
-                  return IconButton(
-                    onPressed: () {
-                      _setStationSelectionne(element);
-                    },
-                    icon: Icon(Icons.local_gas_station, color: Colors.green,),
-                  );
-                }
-            ));
-          });
-          return Center(
-            child: Container(
-              child: Column(
-                children: [
-                  Flexible(
-                      child: FlutterMap(
-                        options: MapOptions(
-                          plugins: [
-                            LocationMarkerPlugin(),
-                          ],
-                          maxZoom: 18.4,
-                          center: LatLng(_currentPosition.latitude, _currentPosition.longitude),
-                        ),
-                        layers: [
-                          TileLayerOptions(
-                            urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                            subdomains: ['a', 'b', 'c'],
-                          ),
-                          MarkerLayerOptions(
-                              markers: _markers as List<Marker>
-                          ),
-                          //LocationMarkerLayerOptions(),
-                        ],
+          final data = snapshot.data;
+          _markers.add(Marker(
+            point: LatLng(_currentPosition.latitude, _currentPosition.longitude),
+            width: 80,
+            height: 80,
+            builder: (context) => Icon(Icons.location_on, color: Colors.red,),
+          ));
 
-                      )
+          return FutureBuilder(
+            builder: (context, snapshot){
+              if(snapshot.connectionState == ConnectionState.done && snapshot.hasData){
+                final data = snapshot.data as List;
+                data.forEach((element) {
+                  _markers.add(Marker(
+                      point: LatLng(element['adresse']['latitude'], element['adresse']['longitude']),
+                      width: 80,
+                      height: 80,
+                      builder: (context) {
+                        return IconButton(
+                          onPressed: () {
+                            _setStationSelectionne(element);
+                          },
+                          icon: Icon(Icons.local_gas_station, color: Colors.green,),
+                        );
+                      }
+                  ));
+                });
+                return Center(
+                  child: Container(
+                    child: Column(
+                      children: [
+                        Flexible(
+                            child: FlutterMap(
+                              options: MapOptions(
+                                plugins: [
+                                  LocationMarkerPlugin(),
+                                ],
+                                maxZoom: 18.4,
+                                center: LatLng(_currentPosition.latitude, _currentPosition.longitude),
+                              ),
+                              layers: [
+                                TileLayerOptions(
+                                  urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                                  subdomains: ['a', 'b', 'c'],
+                                ),
+                                MarkerLayerOptions(
+                                    markers: _markers as List<Marker>
+                                ),
+                                //LocationMarkerLayerOptions(),
+                              ],
+
+                            )
+                        ),
+                        SlidingUpPanel(
+                          body: Center(child: _stationSelectionne['marque'] != null ? Text(_stationSelectionne['marque']['nom']) : Text("Pas de station selectionne"),),
+                          panelBuilder: (sc) => _panel(sc),
+                        )
+                      ],
+                    ),
                   ),
-                  SlidingUpPanel(
-                    body: Center(child: _stationSelectionne['marque'] != null ? Text(_stationSelectionne['marque']['nom']) : Text("Pas de station selectionne"),),
-                    panelBuilder: (sc) => _panel(sc),
-                  )
-                ],
-              ),
-            ),
+                );
+              }else{
+                return FlutterMap(
+                  options: MapOptions(
+                    plugins: [
+                      LocationMarkerPlugin(),
+                    ],
+                    maxZoom: 18.4,
+                    center: LatLng(0, 0),
+                  ),
+                );
+              }
+            },
+            future: stationViewModel.getStationInPerimetre(_currentPosition.longitude, _currentPosition.latitude, widget.rangeValue),
           );
         }else{
-          return CircularProgressIndicator();
+          return FlutterMap(
+            options: MapOptions(
+              plugins: [
+                LocationMarkerPlugin(),
+              ],
+              maxZoom: 18.4,
+              center: LatLng(0, 0),
+            ),
+          );
         }
       },
-      future: stationViewModel.getStationInPerimetre(_currentPosition.longitude, _currentPosition.latitude, widget.rangeValue),
+      future: _determinePosition().then((Position position) => _currentPosition = position),
     );
+
+
   }
   Widget _button(String label, IconData icon, Color color) {
     return Column(

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tu_carbure/data/favoris_data.dart';
 
 class Favoris extends StatefulWidget {
@@ -29,7 +30,7 @@ class _FavorisState extends State<Favoris>{
                     children: <Widget>[
                       Expanded(
                           child : Text(
-                              data[index]['name'],
+                              data[index]['nom'],
                               textAlign: TextAlign.center,
                               style:TextStyle(fontSize: 16)),
                       ),
@@ -58,14 +59,28 @@ class _FavorisState extends State<Favoris>{
   }
 
   Future<List> _getFavoris() async {
-    var json = await FavorisData().getFavoris();
-    return json?["results"] as List;
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var res = json.decode(prefs.get('fav').toString());
+    return res;
   }
 
   void _removeFavoris(id) async {
-    var json = await _getFavoris();
-    json.removeWhere((item) => item['id'] == id);
-    FavorisData().writeFavoris("{\"results\":"+ jsonEncode(json).toString() +"}");
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<dynamic> res = json.decode(prefs.get('fav').toString());
+
+    var toRemove;
+    res.forEach((element) {
+      if(element["id"] == id){
+        toRemove = element;
+      }
+    });
+    res.remove(toRemove);
+
+    String encodedMap = json.encode(res);
+    prefs.setString('fav', encodedMap);
+
     setState((){
       _favoris = _getFavoris();
     });
