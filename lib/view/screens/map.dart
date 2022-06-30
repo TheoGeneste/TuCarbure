@@ -27,7 +27,6 @@ class _MyMapState extends State<MyMap> {
   @override
   Widget build(BuildContext context) {
     _determinePosition().then((Position position) => _currentPosition = position);
-
     List<Marker> _markers = [];
     StationViewModel stationViewModel = context.read<StationViewModel>();
     _markers.add(Marker(
