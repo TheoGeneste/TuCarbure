@@ -1,8 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
-import 'dart:js_util';
-import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
@@ -17,6 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:tu_carbure/data/favoris_data.dart';
 import 'package:tu_carbure/view/viewmodels/stations_viewmodel.dart';
+import 'package:tu_carbure/view/widgets/panel_map.dart';
 
 class MyMap extends StatefulWidget {
   final int rangeValue;
@@ -42,7 +39,6 @@ class _MyMapState extends State<MyMap> {
         builder: (context, snapshot){
           if(snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
             if(snapshot.data is SharedPreferences){
-              print(snapshot.data);
             }
             return FutureBuilder(
               builder: (context, snapshot){
@@ -100,10 +96,7 @@ class _MyMapState extends State<MyMap> {
 
                                     )
                                 ),
-                                SlidingUpPanel(
-                                  body: Center(child: _stationSelectionne['marque'] != null ? Text(_stationSelectionne['marque']['nom']) : Text("Pas de station selectionne"),),
-                                  panelBuilder: (sc) => _panel(sc),
-                                )
+                                Panel(stationSelectionne: _stationSelectionne,)
                               ],
                             ),
                           ),
@@ -172,69 +165,6 @@ class _MyMapState extends State<MyMap> {
         Text(label),
       ],
     );
-  }
-
-  Widget _panel(ScrollController sc) {
-    return MediaQuery.removePadding(
-        context: context,
-        removeTop: true,
-        child: ListView(
-          controller: sc,
-          children: <Widget>[
-            SizedBox(
-              height: 12.0,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  width: 30,
-                  height: 5,
-                  decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.all(Radius.circular(12.0))),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 18.0,
-            ),
-            Text(
-              _stationSelectionne['marque'] != null ? _stationSelectionne['marque']['nom']: "pas de station",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontWeight: FontWeight.normal,
-                fontSize: 24.0,
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 5)),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-              child: Text(
-                _stationSelectionne['adresse'] != null ? _stationSelectionne['adresse']['rue'] + ", " + _stationSelectionne['adresse']['codePostal'] + " " + _stationSelectionne['adresse']['ville']: "pas de station",
-              )
-            ),
-            Row(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.star_outline),
-                  onPressed: () {
-                    print(_stationSelectionne);
-                    FavorisData().addFavoris(_stationSelectionne['marque']['nom'], _stationSelectionne['id']);
-                  },
-                ),
-                IconButton(
-                  icon: const Icon(Icons.edit),
-                  onPressed: () {
-
-                  },
-                ),
-              ],
-            )
-
-          ],
-        ));
   }
 
   void setLocation(){
