@@ -1,9 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tu_carbure/data/favoris_data.dart';
+
+import '../../SharedPrefUtils.dart';
 
 class Favoris extends StatefulWidget {
   const Favoris({Key? key}) : super(key: key);
@@ -60,26 +58,12 @@ class _FavorisState extends State<Favoris>{
 
   Future<List> _getFavoris() async {
 
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var res = json.decode(prefs.get('fav').toString());
-    return res;
+    return SharedPrefUtils.getFav();
   }
 
   void _removeFavoris(id) async {
 
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<dynamic> res = json.decode(prefs.get('fav').toString());
-
-    var toRemove;
-    res.forEach((element) {
-      if(element["id"] == id){
-        toRemove = element;
-      }
-    });
-    res.remove(toRemove);
-
-    String encodedMap = json.encode(res);
-    prefs.setString('fav', encodedMap);
+    SharedPrefUtils.removeFav(id);
 
     setState((){
       _favoris = _getFavoris();

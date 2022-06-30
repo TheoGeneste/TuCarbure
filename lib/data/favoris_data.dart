@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../SharedPrefUtils.dart';
+
 class FavorisData{
   writeFavoris(String text) async {
     final Directory directory = await getApplicationDocumentsDirectory();
@@ -13,18 +15,8 @@ class FavorisData{
 
   Future<void> addFavoris(nom, id) async {
 
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    if(prefs.containsKey('fav') == false){
-      print("oui");
-      prefs.setString('fav', "[]");
-    }
+    SharedPrefUtils.addToFav({"nom": nom, "id": id});
 
-    List<dynamic> list = json.decode(prefs.get('fav').toString());
-
-    list.add(Map.of({"nom": nom, "id": id}));
-
-    String encodedMap = json.encode(list);
-    prefs.setString('fav', encodedMap);
   }
 
 }
