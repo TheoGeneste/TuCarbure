@@ -12,7 +12,7 @@ class Register extends StatelessWidget {
   TextEditingController passwordController = TextEditingController();
   TextEditingController passwordConfirmationController = TextEditingController();
 
-  _register() {
+  _register(context) {
     if (usernameController.text != "" &&
         mailController.text != "" &&
         passwordConfirmationController.text != "" &&
@@ -22,6 +22,10 @@ class Register extends StatelessWidget {
             passwordController.text, usernameController.text);
       }
     }
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => _popup(context),
+    );
   }
 
   @override
@@ -89,7 +93,8 @@ class Register extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                 child: ElevatedButton(
                   onPressed: () {
-                    _register();
+                    _register(context);
+
                   },
                   style: ElevatedButton.styleFrom(
                     minimumSize: Size.fromHeight(40),
@@ -103,4 +108,28 @@ class Register extends StatelessWidget {
       ]))),
     );
   }
+}
+
+Widget _popup(BuildContext context) {
+  return AlertDialog(
+    title: const Text('Information'),
+    content: Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text("Inscription reussi !"),
+      ],
+    ),
+    actions: <Widget>[
+      FlatButton(
+        onPressed: () {
+          Navigator.of(context).pop();
+          Navigator.pop(context);
+
+        },
+        textColor: Theme.of(context).primaryColor,
+        child: const Text('Accepter'),
+      ),
+    ],
+  );
 }

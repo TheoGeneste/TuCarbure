@@ -13,11 +13,9 @@ class RegisterData{
       "enabled": true,
     };
     final jsonString = json.encode(body);
-    print(jsonString);
     final uri = Uri.parse('http://theslipe.myddns.me:8080/auth/register');
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
     final response = await http.post(uri, headers: headers, body: jsonString);
-    print(response.body);
     return response.body;
   }
 }

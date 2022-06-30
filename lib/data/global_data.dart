@@ -24,10 +24,12 @@ class GlobalData{
     return decode;
   }
 
-  Future<void> saveLogin(username, email, token) async {
-    var map = {"username":username, "token":token, "email" : email};
+  Future<void> saveLogin(String username, String email, String token, bool isLogged) async {
+    var map = {"username":username, "token":token, "email" : email, "isLogged": isLogged};
     writeGlobal(jsonEncode(map));
   }
 
-
+  Future<void> disconnect() async {
+    saveLogin("","","", false);
+  }
 }

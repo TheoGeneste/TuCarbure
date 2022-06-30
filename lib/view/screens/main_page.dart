@@ -33,9 +33,7 @@ class _MainPageState extends State<MainPage> {
     username = global?["username"];
     token = global?["token"];
     email = global?["email"];
-    if(token != ""){
-      isLogged = true;
-    }
+    isLogged = global?["isLogged"];
     print(token);
   }
 
@@ -46,17 +44,17 @@ class _MainPageState extends State<MainPage> {
   ];
 
   void _changePage(int index){
+    _readGlobal();
     setState((){
       _index = index;
     });
+
   }
 
   @override
   Widget build(BuildContext context) {
     _readGlobal();
-    print("ok");
-    print(isLogged);
-    isLogged = false;
+
     _widget[0] = MyMap(rangeValue: _Rangevalue);
     _widget[2] = isLogged ? Profile() : Login();
 

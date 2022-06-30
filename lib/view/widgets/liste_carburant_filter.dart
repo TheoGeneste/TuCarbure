@@ -15,8 +15,6 @@ class _ListeCarburantFilterState extends State<ListeCarburantFilter>{
   Widget build(BuildContext context) {
     return FutureBuilder(builder: (context, snapshot){
       if(snapshot.connectionState == ConnectionState.done && snapshot.hasData){
-        print("snapshot.data");
-        print(snapshot.data);
         final data = snapshot.data as List;
         return ListView.builder(
           itemBuilder: (BuildContext context, int index) {
@@ -47,7 +45,7 @@ class _ListeCarburantFilterState extends State<ListeCarburantFilter>{
           padding: const EdgeInsets.all(8),
         );
       } else {
-        return Center(child: CircularProgressIndicator(),);
+        return const Center(child: CircularProgressIndicator(),);
       }
     }, future: CarburantViewModel().getListeCarburant());
   }

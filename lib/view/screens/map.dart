@@ -27,9 +27,9 @@ class _MyMapState extends State<MyMap> {
   Widget build(BuildContext context) {
     setLocation();
     StreamSubscription<Position> positionStream = Geolocator.getPositionStream(locationSettings: locationSettings).listen(
-      (Position? position) {
-        print(position == null ? 'Unknown' : '${position.latitude.toString()}, ${position.longitude.toString()}');
-      }
+            (Position? position) {
+          print(position == null ? 'Unknown' : '${position.latitude.toString()}, ${position.longitude.toString()}');
+        }
     );
     List<Marker> _markers = [];
     _determinePosition();
@@ -150,7 +150,6 @@ class _MyMapState extends State<MyMap> {
         return Future.error('Location permissions are denied');
       }
     }
-    print(permission);
     if (permission == LocationPermission.deniedForever) {
       return Future.error(
           'Location permissions are permanently denied, we cannot request permissions.');

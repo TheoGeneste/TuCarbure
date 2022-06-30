@@ -1,8 +1,19 @@
-import 'package:flutter/material.dart';
-import '../../data/profile_data.dart';
+import 'dart:convert';
 
-class Profile extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:tu_carbure/view/screens/main_page.dart';
+import 'package:tu_carbure/view/screens/map.dart';
+import '../../data/profile_data.dart';
+import '../../data/global_data.dart';
+
+class Profile extends StatefulWidget {
   Profile({Key? key}) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => _ProfileState();
+}
+
+class _ProfileState extends State<Profile> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController mailController = TextEditingController();
   TextEditingController telephoneController = TextEditingController();
@@ -11,16 +22,20 @@ class Profile extends StatelessWidget {
   TextEditingController nomController = TextEditingController();
   TextEditingController prenomController = TextEditingController();
 
-  _getProfile(){
-    var data = ProfileData().getProfile("test");
+  _getProfile() async {
+    var res = await ProfileData().getProfile();
+    var r = jsonDecode(res) as Map<String, dynamic>;
+    prenomController.text = r["prenom"];
+    nomController.text = r["nom"];
   }
 
-  _setUsername(){
-    return "test";
+  _updateProfile() async {
+    var res = await ProfileData().updateProfile(nomController.text, prenomController.text);
   }
 
   @override
   Widget build(BuildContext context) {
+    _getProfile();
     return SingleChildScrollView(
           child:
           Center(
@@ -33,36 +48,6 @@ class Profile extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal:32, vertical: 16),
-                        child: TextFormField(
-                          controller: usernameController,
-                          decoration: const InputDecoration(
-                            border: UnderlineInputBorder(),
-                            labelText: 'Nom d\'utilisateur',
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal:32, vertical: 16),
-                        child: TextFormField(
-                          controller: mailController,
-                          decoration: const InputDecoration(
-                            border: UnderlineInputBorder(),
-                            labelText: 'Mail',
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal:32, vertical: 16),
-                        child: TextFormField(
-                          controller: telephoneController,
-                          decoration: const InputDecoration(
-                            border: UnderlineInputBorder(),
-                            labelText: 'Numero de téléphone',
-                          ),
-                        ),
-                      ),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal:32, vertical: 16),
                         child: TextFormField(
@@ -83,36 +68,30 @@ class Profile extends StatelessWidget {
                           ),
                         ),
                       ),
-
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal:32, vertical: 16),
-                        child: TextFormField(
-                          controller: passwordController,
-                          decoration: const InputDecoration(
-                            border: UnderlineInputBorder(),
-                            labelText: 'Mot de passe',
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal:32, vertical: 16),
-                        child: TextFormField(
-                          controller: passwordConfirmationController,
-                          decoration: const InputDecoration(
-                            border: UnderlineInputBorder(),
-                            labelText: 'Confirmation du mot de passe',
-                          ),
-                        ),
-                      ),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                         child: ElevatedButton(
                           onPressed: () {
+                            _updateProfile();
                           },
                           style: ElevatedButton.styleFrom(
                             minimumSize: Size.fromHeight(40),
                           ),
                           child: const Text('Modifier'),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            GlobalData().disconnect();
+                            //TODO: Faire verif bien deco
+                            Navigator.push(context, MaterialPageRoute(builder: (contex) => MainPage()));
+                          },
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: Size.fromHeight(40),
+                          ),
+                          child: const Text('Deconnexion'),
                         ),
                       ),
                     ],

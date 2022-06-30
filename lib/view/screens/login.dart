@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:tu_carbure/view/screens/main_page.dart';
 import 'package:tu_carbure/view/screens/register.dart';
 
 import '../../data/global_data.dart';
@@ -30,12 +31,10 @@ class _LoginState extends State<Login>{
       SharedPreferences.setMockInitialValues({});
       //Si se souvenir de moi alors :
       //test@gmail.com:password : Test123
-      GlobalData().saveLogin(r["username"],r["email"],r["token"]);
+      GlobalData().saveLogin(r["username"],r["email"],r["token"],true);
+      print(r["token"]);
     }
   }
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -93,6 +92,9 @@ class _LoginState extends State<Login>{
                       child: ElevatedButton(
                         onPressed: () {
                           _login();
+
+                          //TODO : Verif connexion reussi
+                          Navigator.push(context, MaterialPageRoute(builder: (contex) => MainPage()));
                         },
                         style: ElevatedButton.styleFrom(
                           minimumSize: Size.fromHeight(40),
