@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:tu_carbure/data/favoris_data.dart';
 import 'package:tu_carbure/view/viewmodels/stations_viewmodel.dart';
+import 'package:tu_carbure/view/widgets/panel_map.dart';
 
 import '../../SharedPrefUtils.dart';
 
@@ -33,7 +34,6 @@ class _MyMapState extends State<MyMap> {
     List<Marker> _markers = [];
     StationViewModel stationViewModel = context.read<StationViewModel>();
     List<dynamic> fav = [];
-
     SharedPrefUtils.getFav().then((result) {
       print(result);
       fav = result;
@@ -178,69 +178,6 @@ class _MyMapState extends State<MyMap> {
         Text(label),
       ],
     );
-  }
-
-  Widget _panel(ScrollController sc) {
-    return MediaQuery.removePadding(
-        context: context,
-        removeTop: true,
-        child: ListView(
-          controller: sc,
-          children: <Widget>[
-            SizedBox(
-              height: 12.0,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  width: 30,
-                  height: 5,
-                  decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.all(Radius.circular(12.0))),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 18.0,
-            ),
-            Text(
-              _stationSelectionne['marque'] != null ? _stationSelectionne['marque']['nom']: "pas de station",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontWeight: FontWeight.normal,
-                fontSize: 24.0,
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 5)),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-              child: Text(
-                _stationSelectionne['adresse'] != null ? _stationSelectionne['adresse']['rue'] + ", " + _stationSelectionne['adresse']['codePostal'] + " " + _stationSelectionne['adresse']['ville']: "pas de station",
-              )
-            ),
-            Row(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.star_outline),
-                  onPressed: () {
-                    print(_stationSelectionne);
-                    FavorisData().addFavoris(_stationSelectionne['marque']['nom'], _stationSelectionne['id']);
-                  },
-                ),
-                IconButton(
-                  icon: const Icon(Icons.edit),
-                  onPressed: () {
-
-                  },
-                ),
-              ],
-            )
-
-          ],
-        ));
   }
 
   void setLocation(){
