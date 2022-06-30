@@ -2,11 +2,12 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-class StationsData{
+class MarquesData{
 
-   Future<String> getStationWithPerimetre() async {
+   Future<String> getMarques() async {
     var url = Uri.parse('http://theslipe.myddns.me:8080/marques');
-    var stations = await http.get(url);
-    return stations.body;
+    var marques = await http.get(url);
+
+    return marques.body;
   }
 }
