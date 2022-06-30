@@ -73,11 +73,11 @@ class _LoginState extends State<Login>{
                           ),
                         )
                     ),
-                    Padding(
+                    /**Padding(
                         padding: EdgeInsets.symmetric(
                             horizontal: 32, vertical: 16),
                         child: CheckboxListTile(
-                          value: seSouvenirDeMoi = false,
+                          value: seSouvenirDeMoi,
                           title: Text("Se souvenir de moi"),
                           onChanged: (bool? value) {
                             seSouvenirDeMoi = !seSouvenirDeMoi;
@@ -85,7 +85,7 @@ class _LoginState extends State<Login>{
                           },
 
                         )
-                    ),
+                    ),**/
                     Padding(
                       padding: EdgeInsets.symmetric(
                           horizontal: 32, vertical: 16),
