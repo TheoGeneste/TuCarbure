@@ -3,9 +3,8 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 
-class LoginData{
-
-   Future<String> login(String email, String password) async {
+class LoginData {
+  Future<String> login(String email, String password) async {
     final body = {
       "email": email,
       "password": password,

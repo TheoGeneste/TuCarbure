@@ -4,15 +4,15 @@ import 'package:tu_carbure/view/screens/SaisiePrix.dart';
 import 'package:tu_carbure/view/screens/main_page.dart';
 import 'package:tu_carbure/view/screens/register.dart';
 import 'package:tu_carbure/view/screens/stationCreation.dart';
-import 'package:tu_carbure/view/viewmodels/historique_carburant_viewmodel.dart';
 import 'package:tu_carbure/view/viewmodels/stations_viewmodel.dart';
 
 void main() {
-
-  runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(create: (_)=> StationViewModel()),
-  ],
-    child: const MyApp(),));
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (_) => StationViewModel()),
+    ],
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -31,9 +31,8 @@ class MyApp extends StatelessWidget {
       routes: {
         '/creation-station': (context) => StationCreation(),
         '/register': (context) => Register(),
-        '/saisie-prix':(context) => SaisiePrix(),
+        '/saisie-prix': (context) => SaisiePrix(),
       },
     );
   }
 }
-

@@ -8,10 +8,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'package:tu_carbure/data/favoris_data.dart';
-import 'package:tu_carbure/model/SaisiePrixParam.dart';
-import 'package:tu_carbure/view/screens/SaisiePrix.dart';
 import 'package:tu_carbure/view/viewmodels/stations_viewmodel.dart';
 import 'package:tu_carbure/view/widgets/panel_map.dart';
 
@@ -20,7 +16,9 @@ import '../../SharedPrefUtils.dart';
 class MyMap extends StatefulWidget {
   final int rangeValue;
   final Map<String, bool> tableauCarburant;
-  MyMap({Key? key, required this.rangeValue, required this.tableauCarburant}) : super(key: key);
+
+  MyMap({Key? key, required this.rangeValue, required this.tableauCarburant})
+      : super(key: key);
 
   @override
   State<MyMap> createState() => _MyMapState();
@@ -31,9 +29,8 @@ class _MyMapState extends State<MyMap> {
   var _stationSelectionne = {};
   late Position _currentPosition;
 
-  void refresh(){
-    setState((){
-    });
+  void refresh() {
+    setState(() {});
   }
 
   @override
@@ -46,23 +43,30 @@ class _MyMapState extends State<MyMap> {
     });
 
     return FutureBuilder(
-      builder: (context, snapshot){
-        if(snapshot.connectionState == ConnectionState.done && snapshot.hasData){
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done &&
+            snapshot.hasData) {
           final data = snapshot.data;
           _markers.add(Marker(
-            point: LatLng(_currentPosition.latitude, _currentPosition.longitude),
+            point:
+                LatLng(_currentPosition.latitude, _currentPosition.longitude),
             width: 80,
             height: 80,
-            builder: (context) => Icon(Icons.location_on, color: Colors.red,),
+            builder: (context) => Icon(
+              Icons.location_on,
+              color: Colors.red,
+            ),
           ));
 
           return FutureBuilder(
-            builder: (context, snapshot){
-              if(snapshot.connectionState == ConnectionState.done && snapshot.hasData){
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done &&
+                  snapshot.hasData) {
                 final data = snapshot.data as Map<String, dynamic>;
                 data["stations"].forEach((element) {
                   _markers.add(Marker(
-                      point: LatLng(element['adresse']['latitude'], element['adresse']['longitude']),
+                      point: LatLng(element['adresse']['latitude'],
+                          element['adresse']['longitude']),
                       width: 80,
                       height: 80,
                       builder: (context) {
@@ -70,15 +74,20 @@ class _MyMapState extends State<MyMap> {
                           onPressed: () {
                             _setStationSelectionne(element);
                           },
-                          icon: Icon(Icons.local_gas_station, color: _isFav(element['id'], fav)?Colors.blue:Colors.green,),
+                          icon: Icon(
+                            Icons.local_gas_station,
+                            color: _isFav(element['id'], fav)
+                                ? Colors.blue
+                                : Colors.green,
+                          ),
                         );
-                      }
-                  ));
+                      }));
                 });
 
-                if(data["bestStation"] != null){
+                if (data["bestStation"] != null) {
                   _markers.add(Marker(
-                      point: LatLng(data["bestStation"]['adresse']['latitude'], data["bestStation"]['adresse']['longitude']),
+                      point: LatLng(data["bestStation"]['adresse']['latitude'],
+                          data["bestStation"]['adresse']['longitude']),
                       width: 80,
                       height: 80,
                       builder: (context) {
@@ -86,10 +95,14 @@ class _MyMapState extends State<MyMap> {
                           onPressed: () {
                             _setStationSelectionne(data["bestStation"]);
                           },
-                          icon: Icon(Icons.local_gas_station, color: _isFav(data["bestStation"]['id'], fav)?Colors.blue:Colors.deepOrangeAccent,),
+                          icon: Icon(
+                            Icons.local_gas_station,
+                            color: _isFav(data["bestStation"]['id'], fav)
+                                ? Colors.blue
+                                : Colors.deepOrangeAccent,
+                          ),
                         );
-                      }
-                  ));
+                      }));
                 }
                 return Center(
                   child: Container(
@@ -97,32 +110,34 @@ class _MyMapState extends State<MyMap> {
                       children: [
                         Flexible(
                             child: FlutterMap(
-                              options: MapOptions(
-                                plugins: [
-                                  LocationMarkerPlugin(),
-                                ],
-                                maxZoom: 18.4,
-                                center: LatLng(_currentPosition.latitude, _currentPosition.longitude),
-                              ),
-                              layers: [
-                                TileLayerOptions(
-                                  urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                                  subdomains: ['a', 'b', 'c'],
-                                ),
-                                MarkerLayerOptions(
-                                    markers: _markers as List<Marker>
-                                ),
-                                //LocationMarkerLayerOptions(),
-                              ],
-
-                            )
-                        ),
-                        Panel(stationSelectionne: _stationSelectionne, fav: fav,  refreshMap : refresh)
+                          options: MapOptions(
+                            plugins: [
+                              LocationMarkerPlugin(),
+                            ],
+                            maxZoom: 18.4,
+                            center: LatLng(_currentPosition.latitude,
+                                _currentPosition.longitude),
+                          ),
+                          layers: [
+                            TileLayerOptions(
+                              urlTemplate:
+                                  "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                              subdomains: ['a', 'b', 'c'],
+                            ),
+                            MarkerLayerOptions(
+                                markers: _markers as List<Marker>),
+                            //LocationMarkerLayerOptions(),
+                          ],
+                        )),
+                        Panel(
+                            stationSelectionne: _stationSelectionne,
+                            fav: fav,
+                            refreshMap: refresh)
                       ],
                     ),
                   ),
                 );
-              }else{
+              } else {
                 return FlutterMap(
                   options: MapOptions(
                     plugins: [
@@ -134,9 +149,13 @@ class _MyMapState extends State<MyMap> {
                 );
               }
             },
-            future: stationViewModel.getStationInPerimetre(_currentPosition.longitude, _currentPosition.latitude, widget.rangeValue, widget.tableauCarburant),
+            future: stationViewModel.getStationInPerimetre(
+                _currentPosition.longitude,
+                _currentPosition.latitude,
+                widget.rangeValue,
+                widget.tableauCarburant),
           );
-        }else{
+        } else {
           return FlutterMap(
             options: MapOptions(
               plugins: [
@@ -148,7 +167,8 @@ class _MyMapState extends State<MyMap> {
           );
         }
       },
-      future: _determinePosition().then((Position position) => _currentPosition = position),
+      future: _determinePosition()
+          .then((Position position) => _currentPosition = position),
     );
   }
 
@@ -167,7 +187,7 @@ class _MyMapState extends State<MyMap> {
             color: Colors.white,
           ),
           decoration:
-          BoxDecoration(color: color, shape: BoxShape.circle, boxShadow: [
+              BoxDecoration(color: color, shape: BoxShape.circle, boxShadow: [
             BoxShadow(
               color: Color.fromRGBO(0, 0, 0, 0.15),
               blurRadius: 8.0,
@@ -182,7 +202,7 @@ class _MyMapState extends State<MyMap> {
     );
   }
 
-  void setLocation(){
+  void setLocation() {
     if (defaultTargetPlatform == TargetPlatform.android) {
       locationSettings = AndroidSettings(
           accuracy: LocationAccuracy.high,
@@ -193,12 +213,12 @@ class _MyMapState extends State<MyMap> {
           //when going to the background
           foregroundNotificationConfig: const ForegroundNotificationConfig(
             notificationText:
-            "Example app will continue to receive your location even when you aren't using it",
+                "Example app will continue to receive your location even when you aren't using it",
             notificationTitle: "Running in Background",
             enableWakeLock: true,
-          )
-      );
-    } else if (defaultTargetPlatform == TargetPlatform.iOS || defaultTargetPlatform == TargetPlatform.macOS) {
+          ));
+    } else if (defaultTargetPlatform == TargetPlatform.iOS ||
+        defaultTargetPlatform == TargetPlatform.macOS) {
       locationSettings = AppleSettings(
         accuracy: LocationAccuracy.high,
         activityType: ActivityType.fitness,
@@ -240,10 +260,11 @@ class _MyMapState extends State<MyMap> {
   }
 
   _getCurrentLocation() async {
-    await Geolocator
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.best, forceAndroidLocationManager: true)
+    await Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.best,
+            forceAndroidLocationManager: true)
         .then((Position position) {
-      setState((){
+      setState(() {
         //_currentPosition = position;
       });
     }).catchError((e) {
@@ -260,12 +281,10 @@ class _MyMapState extends State<MyMap> {
   bool _isFav(id, List<dynamic> fav) {
     bool res = false;
     fav.forEach((element) {
-      if(element["id"] == id){
+      if (element["id"] == id) {
         res = true;
       }
     });
     return res;
   }
-
 }
-
