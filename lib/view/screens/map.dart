@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:tu_carbure/data/favoris_data.dart';
+import 'package:tu_carbure/model/SaisiePrixParam.dart';
 import 'package:tu_carbure/view/screens/SaisiePrix.dart';
 import 'package:tu_carbure/view/viewmodels/stations_viewmodel.dart';
 
@@ -222,7 +223,12 @@ class _MyMapState extends State<MyMap> {
                 IconButton(
                   icon: const Icon(Icons.edit),
                   onPressed: () {
-                    Navigator.pushNamed(context, SaisiePrix.routeNames);
+                    print(_stationSelectionne.runtimeType);
+                    Navigator.pushNamed(
+                        context,
+                        SaisiePrix.routeNames,
+                        arguments: SaisiePrixParam(_stationSelectionne)
+                    );
 
                     //TODO EDIT PRIX
                   },

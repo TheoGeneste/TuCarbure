@@ -102,4 +102,11 @@ class StationsData{
      print(response.body);
      return response.body;
    }
+
+   Future<String> getCarburants(String id) async {
+     var url = Uri.parse('http://theslipe.myddns.me:8080/stations/' + id + '/carburants');
+     var carburants = await http.get(url);
+
+     return carburants.body;
+   }
 }
