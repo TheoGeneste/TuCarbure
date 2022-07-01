@@ -18,6 +18,7 @@ class SaisiePrix extends StatefulWidget {
 
 class _SaisiePrixState extends State<SaisiePrix>{
   List<TextEditingController> listeController = [];
+  List<bool> listeValueDispo = [];
 
   @override
   Widget build(BuildContext context) {
@@ -38,15 +39,13 @@ class _SaisiePrixState extends State<SaisiePrix>{
               children: [
                 FutureBuilder(builder: (context, snapshot){
       if(snapshot.connectionState == ConnectionState.done && snapshot.hasData){
-        print("TEST");
-
-        print(snapshot.data);
-
         final data = snapshot.data as List;
         for (var i in data){
-          print(i["nom"]);
           listeController.add(TextEditingController());
+          listeValueDispo.add(i["disponible"]);
         }
+
+        print(listeValueDispo);
 
         return ListView.builder(
           shrinkWrap: true,
@@ -57,7 +56,7 @@ class _SaisiePrixState extends State<SaisiePrix>{
                   child: Row(
                     children: <Widget>[
                       Container(
-                          constraints: BoxConstraints(minWidth: 200, maxWidth: 200),
+                          constraints: BoxConstraints(minWidth: 150, maxWidth: 150),
                           child: Text(
                               data[index]['nom'],
                               style:TextStyle(fontSize: 16)
@@ -71,6 +70,19 @@ class _SaisiePrixState extends State<SaisiePrix>{
                             decoration: const InputDecoration(
                               border: UnderlineInputBorder(),
                             ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        constraints: BoxConstraints(minWidth: 100, maxWidth: 100),
+                        child:Expanded(
+                          child : Checkbox(
+                            onChanged: (bool? value) {
+                              setState(() {
+                                listeValueDispo[index] = value! ? value : false;
+                              });
+                            },
+                            value: listeValueDispo[index],
                           ),
                         ),
                       )
