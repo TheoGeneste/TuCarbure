@@ -3,9 +3,9 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 
-class RegisterData{
-
-   Future<String> register(String email, String password, String fullname) async {
+class RegisterData {
+  Future<String> register(
+      String email, String password, String fullname) async {
     final body = {
       "email": email,
       "password": password,

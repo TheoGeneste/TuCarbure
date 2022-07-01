@@ -10,7 +10,8 @@ class Register extends StatelessWidget {
   TextEditingController mailController = TextEditingController();
   TextEditingController telephoneController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  TextEditingController passwordConfirmationController = TextEditingController();
+  TextEditingController passwordConfirmationController =
+      TextEditingController();
 
   _register(context) {
     if (usernameController.text != "" &&
@@ -18,8 +19,8 @@ class Register extends StatelessWidget {
         passwordConfirmationController.text != "" &&
         passwordController.text != "") {
       if (passwordController.text == passwordConfirmationController.text) {
-        RegisterData().register(mailController.text,
-            passwordController.text, usernameController.text);
+        RegisterData().register(mailController.text, passwordController.text,
+            usernameController.text);
       }
     }
     showDialog(
@@ -94,7 +95,6 @@ class Register extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () {
                     _register(context);
-
                   },
                   style: ElevatedButton.styleFrom(
                     minimumSize: Size.fromHeight(40),
@@ -125,7 +125,6 @@ Widget _popup(BuildContext context) {
         onPressed: () {
           Navigator.of(context).pop();
           Navigator.pop(context);
-
         },
         textColor: Theme.of(context).primaryColor,
         child: const Text('Accepter'),
