@@ -138,11 +138,7 @@ class StationsData{
            "nom": carburants[index]['nom'],
            "codeEuropeen": carburants[index]['code'],
            "disponible": listeController[index].text == 0 ? false : listeValueDispo[index],
-           "prix":
-           listeController[index].text != "" ?  (
-               double.parse(listeController[index].text) > 3 ? 3 :  double.parse(listeController[index].text) > 0.5 ? 0.5 :  listeController[index].text
-           ) :
-           0
+           "prix": listeController[index].text != "" ?  listeController[index].text : 0
          });
          index++;
      }

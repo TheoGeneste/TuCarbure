@@ -147,7 +147,15 @@ class _SaisiePrixState extends State<SaisiePrix>{
         padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
         child: ElevatedButton(
           onPressed: () {
-            StationsData().updateCarburant(listeController, args.station['id'], listeValueDispo);
+            var validData = true;
+            for(var prix in listeController){
+              if(double.parse(prix.text) > 3 && double.parse(prix.text) <0.5){
+                validData = false;
+              }
+            }
+
+              StationsData().updateCarburant(
+                  listeController, args.station['id'], listeValueDispo);
           },
           style: ElevatedButton.styleFrom(
             minimumSize: Size.fromHeight(40),
