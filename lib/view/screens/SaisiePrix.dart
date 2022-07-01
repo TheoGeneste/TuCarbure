@@ -34,7 +34,8 @@ class _SaisiePrixState extends State<SaisiePrix>{
           title: Text('Mise à jour des prix'),
           actions: <Widget>[],
         ),
-      body:Form(
+      body:SingleChildScrollView(
+    child:Form(
           child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -112,7 +113,7 @@ class _SaisiePrixState extends State<SaisiePrix>{
                                 decoration: const InputDecoration(
                                   border: UnderlineInputBorder(),
                                 ),
-                                
+
                               ),
                             ),
                           ),
@@ -146,7 +147,7 @@ class _SaisiePrixState extends State<SaisiePrix>{
         padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
         child: ElevatedButton(
           onPressed: () {
-            StationsData().updateCarburant(listeController, args.station['id']);
+            StationsData().updateCarburant(listeController, args.station['id'], listeValueDispo);
           },
           style: ElevatedButton.styleFrom(
             minimumSize: Size.fromHeight(40),
@@ -156,7 +157,7 @@ class _SaisiePrixState extends State<SaisiePrix>{
       ),
     ]
     )
-    )
+    ))
     );
   }
 
