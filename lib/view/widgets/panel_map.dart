@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:tu_carbure/SharedPrefUtils.dart';
 import 'package:tu_carbure/view/widgets/historiques_carburant.dart';
@@ -6,6 +7,7 @@ import 'package:tu_carbure/view/widgets/historiques_carburant.dart';
 import '../../data/favoris_data.dart';
 import '../../model/SaisiePrixParam.dart';
 import '../screens/SaisiePrix.dart';
+import '../viewmodels/historique_carburant_viewmodel.dart';
 
 class Panel extends StatefulWidget {
   var stationSelectionne;
@@ -132,9 +134,9 @@ class _PanelState extends State<Panel>{
                 rows: prixCarburants,
               ),
             ),
-            // Container(
-            //   child:HistoriquesCarburant(id: widget.stationSelectionne['id']),
-            // ),
+            Container(
+              child:HistoriquesCarburant(id: widget.stationSelectionne['id']),
+            ),
           ],
         )
       );

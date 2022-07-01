@@ -4,11 +4,12 @@ import 'package:tu_carbure/view/screens/SaisiePrix.dart';
 import 'package:tu_carbure/view/screens/main_page.dart';
 import 'package:tu_carbure/view/screens/register.dart';
 import 'package:tu_carbure/view/screens/stationCreation.dart';
+import 'package:tu_carbure/view/viewmodels/historique_carburant_viewmodel.dart';
 import 'package:tu_carbure/view/viewmodels/stations_viewmodel.dart';
 
 void main() {
   runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(create: (_)=> StationViewModel())
+    ChangeNotifierProvider(create: (_)=> StationViewModel()),
   ],
     child: const MyApp(),));
 }

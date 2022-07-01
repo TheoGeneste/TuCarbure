@@ -9,7 +9,7 @@ class ListeCarburant{
   }
 
    Future<String> getCarburantsHistorique(id) async {
-    var url = Uri.parse("http://theslipe.myddns.me:8080/stations/$id/historique");
+    var url = Uri.parse("http://theslipe.myddns.me:8080/stations/$id/historique?nb=5");
     var histoCarburants = await http.get(url);
     return histoCarburants.body;
   }
