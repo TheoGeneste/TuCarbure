@@ -5,6 +5,7 @@ import 'package:tu_carbure/SharedPrefUtils.dart';
 import 'package:tu_carbure/view/widgets/historiques_carburant.dart';
 
 import '../../data/favoris_data.dart';
+import '../../data/global_data.dart';
 import '../../model/SaisiePrixParam.dart';
 import '../screens/SaisiePrix.dart';
 import '../viewmodels/historique_carburant_viewmodel.dart';
@@ -20,8 +21,27 @@ class Panel extends StatefulWidget {
 
 }
 class _PanelState extends State<Panel>{
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  bool isLogged = false;
+  String username = "";
+  String token = "";
+  String email = "";
+
+  void _readGlobal() async{
+    var global =  await GlobalData().getGlobal();
+    username = global?["username"];
+    token = global?["token"];
+    email = global?["email"];
+    isLogged = global?["isLogged"];
+    print(token);
+  }
+
+
   @override
   Widget build(BuildContext context) {
+
+    _readGlobal();
+
 
     return Visibility(
       visible: widget.stationSelectionne['marque'] != null ? true : false ,
@@ -99,16 +119,19 @@ class _PanelState extends State<Panel>{
                     ),
                   ),
                   Spacer(flex: 1,),
-                  IconButton(
-                    icon: const Icon(Icons.edit),
-                    onPressed: () {
-                      Navigator.pushNamed(
-                          context,
-                          SaisiePrix.routeNames,
-                          arguments: SaisiePrixParam(widget.stationSelectionne)
-                      );
-                    },
-                  ),
+                  Visibility(
+                    visible: isLogged,
+                      child: IconButton(
+                      icon: const Icon(Icons.edit),
+                      onPressed: () {
+                        Navigator.pushNamed(
+                            context,
+                            SaisiePrix.routeNames,
+                            arguments: SaisiePrixParam(widget.stationSelectionne)
+                        );
+                      },
+                    ),
+                  )
                 ],
               ),
             ),
