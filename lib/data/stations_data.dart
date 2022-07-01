@@ -8,6 +8,7 @@ import 'package:tu_carbure/data/global_data.dart';
 import 'package:tu_carbure/view/viewmodels/stationsCarburants_viewmodel.dart';
 
 import '../view/viewmodels/carburant_viewmodel.dart';
+import 'login_data.dart';
 
 class StationsData{
 
@@ -99,9 +100,24 @@ class StationsData{
        HttpHeaders.contentTypeHeader: 'application/json',
        HttpHeaders.authorizationHeader: 'Bearer '+global?["token"]
      };
-     final response = await http.post(uri, headers: headers, body: jsonString);
-     print(response.body);
-     return response.body;
+     final call = await http.post(uri, headers: headers, body: jsonString);
+
+     var res;
+     if(call.statusCode == 401){
+       var global =  await GlobalData().getGlobal();
+       var r = json.decode(await LoginData().login(global?["username"], global?["password"]));
+
+       GlobalData().saveLogin(r["username"],r["email"],r["token"], global?["password"],true);
+
+       var secondcall = await http.post(uri, headers: headers, body: jsonString);
+
+       res = secondcall.body;
+
+     } else{
+       res = call.body;
+     }
+
+     return res;
    }
 
    Future<String> getCarburants(String id) async {
