@@ -112,10 +112,7 @@ class _MyMapState extends State<MyMap> {
 
                             )
                         ),
-                        SlidingUpPanel(
-                          body: Center(child: _stationSelectionne['marque'] != null ? Text(_stationSelectionne['marque']['nom']) : Text("Pas de station selectionne"),),
-                          panelBuilder: (sc) => _panel(sc),
-                        )
+                        Panel(stationSelectionne: _stationSelectionne)
                       ],
                     ),
                   ),
