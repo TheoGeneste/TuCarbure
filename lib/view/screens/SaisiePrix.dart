@@ -32,7 +32,11 @@ class _SaisiePrixState extends State<SaisiePrix>{
           title: Text('Mise à jour des prix'),
           actions: <Widget>[],
         ),
-      body:FutureBuilder(builder: (context, snapshot){
+      body:Form(
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                FutureBuilder(builder: (context, snapshot){
       if(snapshot.connectionState == ConnectionState.done && snapshot.hasData){
         print("TEST");
 
@@ -82,7 +86,21 @@ class _SaisiePrixState extends State<SaisiePrix>{
         return Center(child: CircularProgressIndicator(),);
       }
     }, future: StationsCarburantsViewModel().getStationCarburant(args.station['id'])),
-
+      Padding(
+        padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+        child: ElevatedButton(
+          onPressed: () {
+            StationsData().updateCarburant(listeController, args.station['id']);
+          },
+          style: ElevatedButton.styleFrom(
+            minimumSize: Size.fromHeight(40),
+          ),
+          child: const Text('Ajouter'),
+        ),
+      ),
+    ]
+    )
+    )
     );
   }
 
