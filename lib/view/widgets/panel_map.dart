@@ -21,7 +21,6 @@ class Panel extends StatefulWidget {
 
 }
 class _PanelState extends State<Panel>{
-  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool isLogged = false;
   String username = "";
   String token = "";

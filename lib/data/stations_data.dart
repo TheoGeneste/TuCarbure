@@ -138,11 +138,7 @@ class StationsData{
            "nom": carburants[index]['nom'],
            "codeEuropeen": carburants[index]['code'],
            "disponible": listeController[index].text == 0 ? false : listeValueDispo[index],
-           "prix":
-           listeController[index].text != "" ?  (
-               double.parse(listeController[index].text) > 3 ? 3 :  double.parse(listeController[index].text) > 0.5 ? 0.5 :  listeController[index].text
-           ) :
-           0
+           "prix": listeController[index].text != "" ?  listeController[index].text : 0
          });
          index++;
      }
@@ -158,22 +154,9 @@ class StationsData{
        HttpHeaders.contentTypeHeader: 'application/json',
        HttpHeaders.authorizationHeader: 'Bearer '+global?["token"]
      };
-     final call = await http.post(uri, headers: headers, body: jsonString);
-
-     var res;
-     if(call.statusCode == 401){
-       var global =  await GlobalData().getGlobal();
-       var r = json.decode(await LoginData().login(global?["username"], global?["password"]));
-
-       GlobalData().saveLogin(r["username"],r["email"],r["token"], global?["password"],true);
-
-       var secondcall = await http.post(uri, headers: headers, body: jsonString);
-
-       res = secondcall.body;
-
-     } else{
-       res = call.body;
-     }
-     return res;
+     final response = await http.post(uri, headers: headers, body: jsonString);
+     print(response.body);
+     print(response.statusCode);
+     return response.body;
    }
 }
