@@ -29,13 +29,17 @@ class _MyMapState extends State<MyMap> {
   var _stationSelectionne = {};
   late Position _currentPosition;
 
+  void refresh(){
+    setState((){
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Marker> _markers = [];
     StationViewModel stationViewModel = context.read<StationViewModel>();
     List<dynamic> fav = [];
     SharedPrefUtils.getFav().then((result) {
-      print(result);
       fav = result;
     });
 
@@ -54,23 +58,6 @@ class _MyMapState extends State<MyMap> {
             builder: (context, snapshot){
               if(snapshot.connectionState == ConnectionState.done && snapshot.hasData){
                 final data = snapshot.data as Map<String, dynamic>;
-                
-                if(data["bestStation"] != null){
-                  _markers.add(Marker(
-                      point: LatLng(data["bestStation"]['adresse']['latitude'], data["bestStation"]['adresse']['longitude']),
-                      width: 80,
-                      height: 80,
-                      builder: (context) {
-                        return IconButton(
-                          onPressed: () {
-                            _setStationSelectionne(data["bestStation"]);
-                          },
-                          icon: Icon(Icons.local_gas_station, color: _isFav(data["bestStation"]['id'], fav)?Colors.blue:Colors.yellow,),
-                        );
-                      }
-                  ));
-                }
-                
                 data["stations"].forEach((element) {
                   _markers.add(Marker(
                       point: LatLng(element['adresse']['latitude'], element['adresse']['longitude']),
@@ -86,6 +73,22 @@ class _MyMapState extends State<MyMap> {
                       }
                   ));
                 });
+
+                if(data["bestStation"] != null){
+                  _markers.add(Marker(
+                      point: LatLng(data["bestStation"]['adresse']['latitude'], data["bestStation"]['adresse']['longitude']),
+                      width: 80,
+                      height: 80,
+                      builder: (context) {
+                        return IconButton(
+                          onPressed: () {
+                            _setStationSelectionne(data["bestStation"]);
+                          },
+                          icon: Icon(Icons.local_gas_station, color: _isFav(data["bestStation"]['id'], fav)?Colors.blue:Colors.deepOrangeAccent,),
+                        );
+                      }
+                  ));
+                }
                 return Center(
                   child: Container(
                     child: Column(
@@ -112,7 +115,7 @@ class _MyMapState extends State<MyMap> {
 
                             )
                         ),
-                        Panel(stationSelectionne: _stationSelectionne)
+                        Panel(stationSelectionne: _stationSelectionne, fav: fav,  refreshMap : refresh)
                       ],
                     ),
                   ),

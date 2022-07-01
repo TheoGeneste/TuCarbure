@@ -1,19 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:tu_carbure/SharedPrefUtils.dart';
 
 import '../../data/favoris_data.dart';
 
-class Panel extends StatelessWidget {
+class Panel extends StatefulWidget {
   var stationSelectionne;
-  Panel({Key? key, required this.stationSelectionne}) : super(key: key);
+  List fav;
+  Function refreshMap;
+  Panel({Key? key, required this.stationSelectionne, required this.fav, required this.refreshMap}) : super(key: key);
 
+  @override
+  State<StatefulWidget> createState() => _PanelState();
+
+}
+class _PanelState extends State<Panel>{
   @override
   Widget build(BuildContext context) {
 
     return Visibility(
-      visible: stationSelectionne['marque'] != null ? true : false ,
+      visible: widget.stationSelectionne['marque'] != null ? true : false ,
       child: SlidingUpPanel(
-        body: Center(child: stationSelectionne['marque'] != null ? Text(stationSelectionne['marque']['nom']) : Text("Pas de station selectionne"),),
+        body: Center(child: widget.stationSelectionne['marque'] != null ? Text(widget.stationSelectionne['marque']['nom']) : Text("Pas de station selectionne"),),
         panelBuilder: (sc) => _panel(sc, context),
       ),
     );
@@ -21,7 +29,7 @@ class Panel extends StatelessWidget {
 
   Widget _panel(ScrollController sc, BuildContext context) {
     List<DataRow> prixCarburants = [];
-    stationSelectionne["carburants"]["details"].forEach((element) {
+    widget.stationSelectionne["carburants"]["details"].forEach((element) {
       prixCarburants.add(
           DataRow(
             cells: [
@@ -32,6 +40,7 @@ class Panel extends StatelessWidget {
           )
       );
     });
+
     return MediaQuery.removePadding(
         context: context,
         removeTop: true,
@@ -60,15 +69,24 @@ class Panel extends StatelessWidget {
               child: Row(
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.star_outline),
+                    icon: _isFav(widget.stationSelectionne['id'], widget.fav) ? Icon(  Icons.star ): Icon(Icons.star_outline),
                     onPressed: () {
-                      print(stationSelectionne);
-                      FavorisData().addFavoris(stationSelectionne['marque']['nom'], stationSelectionne['id']);
+                      if(_isFav(widget.stationSelectionne['id'], widget.fav)){
+                        FavorisData().removeFavoris(widget.stationSelectionne['id']);
+                      }else{
+                        FavorisData().addFavoris(widget.stationSelectionne['marque']['nom'], widget.stationSelectionne['id']);
+                      }
+                      widget.refreshMap();
+                      // setState((){
+                      //   SharedPrefUtils.getFav().then((result) {
+                      //     widget.fav = result;
+                      //   });
+                      // });
                     },
                   ),
                   Spacer(flex: 1,),
                   Text(
-                    stationSelectionne['marque'] != null ? stationSelectionne['marque']['nom']: "pas de station",
+                    widget.stationSelectionne['marque'] != null ? widget.stationSelectionne['marque']['nom']: "pas de station",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontWeight: FontWeight.normal,
@@ -89,7 +107,7 @@ class Panel extends StatelessWidget {
             Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16, vertical: 5),
                 child: Text(
-                  stationSelectionne['adresse'] != null ? stationSelectionne['adresse']['rue'] + ", " + stationSelectionne['adresse']['codePostal'] + " " + stationSelectionne['adresse']['ville']: "pas de station",
+                  widget.stationSelectionne['adresse'] != null ? widget.stationSelectionne['adresse']['rue'] + ", " + widget.stationSelectionne['adresse']['codePostal'] + " " + widget.stationSelectionne['adresse']['ville']: "pas de station",
                 )
             ),
 
@@ -110,4 +128,14 @@ class Panel extends StatelessWidget {
         )
       );
     }
+
+  bool _isFav(id, List<dynamic> fav) {
+    bool res = false;
+    fav.forEach((element) {
+      if(element["id"] == id){
+        res = true;
+      }
+    });
+    return res;
+  }
 }
