@@ -21,7 +21,6 @@ class _LoginState extends State<Login>{
 
 
   _login() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
 
     if (mailController.text != "" && passwordController.text != "") {
       var res = await LoginData().login(
@@ -31,7 +30,7 @@ class _LoginState extends State<Login>{
       SharedPreferences.setMockInitialValues({});
       //Si se souvenir de moi alors :
       //test@gmail.com:password : Test123
-      GlobalData().saveLogin(r["username"],r["email"],r["token"],true);
+      GlobalData().saveLogin(r["username"],r["email"],r["token"],passwordController.text,true);
       print(r["token"]);
     }
   }
