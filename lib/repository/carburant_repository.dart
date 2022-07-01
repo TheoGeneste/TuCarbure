@@ -12,4 +12,10 @@ class CarburantRepository{
 
     return parsed;
   }
+
+  Future<List<Map<String, dynamic>>> GetHistoriquesCarburant(id) async {
+    var histoCarburant =  await ListeCarburant().getCarburantsHistorique(id);
+    final parsed = List<Map<String, dynamic>>.from(json.decode(histoCarburant));
+    return parsed;
+  }
 }
