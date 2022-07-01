@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:tu_carbure/data/stations_data.dart';
+import 'package:tu_carbure/view/viewmodels/stationsCarburants_viewmodel.dart';
 
 import '../../data/liste_carburant_data.dart';
 import 'package:tu_carbure/view/viewmodels/carburant_viewmodel.dart';
 
+import '../../model/SaisiePrixParam.dart';
+
 class SaisiePrix extends StatefulWidget {
+  static const routeNames = "/saisie-prix";
+
   const SaisiePrix({Key? key}) : super(key: key);
 
   @override
@@ -11,35 +17,63 @@ class SaisiePrix extends StatefulWidget {
 }
 
 class _SaisiePrixState extends State<SaisiePrix>{
+  List<TextEditingController> listeController = [];
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(builder: (context, snapshot){
+    final args = ModalRoute.of(context)!.settings.arguments as SaisiePrixParam;
+
+    return Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () => Navigator.of(context).pop(false),
+          ),
+          title: Text('Mise à jour des prix'),
+          actions: <Widget>[],
+        ),
+      body:Form(
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                FutureBuilder(builder: (context, snapshot){
       if(snapshot.connectionState == ConnectionState.done && snapshot.hasData){
+        print("TEST");
+
+        print(snapshot.data);
+
         final data = snapshot.data as List;
+        for (var i in data){
+          print(i["nom"]);
+          listeController.add(TextEditingController());
+        }
 
         return ListView.builder(
+          shrinkWrap: true,
           itemBuilder: (BuildContext context, int index) {
             return Container(
                 height: 60,
-                margin: EdgeInsets.symmetric(horizontal: 20),
                 child: InkWell(
                   child: Row(
                     children: <Widget>[
-                      Expanded(
-                        child : Text(
-                            data[index]['nom'] + " ("+ data[index]["code"] + ")",
-                            style:TextStyle(fontSize: 16)),
+                      Container(
+                          constraints: BoxConstraints(minWidth: 200, maxWidth: 200),
+                          child: Text(
+                              data[index]['nom'],
+                              style:TextStyle(fontSize: 16)
+                          )
                       ),
-                      Expanded(
-                        child : TextFormField(
+                      Container(
+                        constraints: BoxConstraints(minWidth: 100, maxWidth: 100),
+                        child:Expanded(
+                          child : TextFormField(
+                            controller: listeController[index],
                             decoration: const InputDecoration(
                               border: UnderlineInputBorder(),
-                              labelText: 'Prix',
                             ),
+                          ),
                         ),
-                      ),
-
+                      )
                     ],
                   ),
                 )
@@ -51,7 +85,23 @@ class _SaisiePrixState extends State<SaisiePrix>{
       } else {
         return Center(child: CircularProgressIndicator(),);
       }
-    }, future: CarburantViewModel().getListeCarburant()); //Remplacer par le bon appel api avec lid de la station
+    }, future: StationsCarburantsViewModel().getStationCarburant(args.station['id'])),
+      Padding(
+        padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+        child: ElevatedButton(
+          onPressed: () {
+            StationsData().updateCarburant(listeController, args.station['id']);
+          },
+          style: ElevatedButton.styleFrom(
+            minimumSize: Size.fromHeight(40),
+          ),
+          child: const Text('Ajouter'),
+        ),
+      ),
+    ]
+    )
+    )
+    );
   }
 
 }

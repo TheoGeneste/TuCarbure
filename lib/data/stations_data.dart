@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:tu_carbure/data/global_data.dart';
+import 'package:tu_carbure/view/viewmodels/stationsCarburants_viewmodel.dart';
 
 import '../view/viewmodels/carburant_viewmodel.dart';
 import 'login_data.dart';
@@ -58,7 +59,7 @@ class StationsData{
 
           listeCarburantDetails.add({
             "nom": carburants[index]['nom'],
-            "codeEuropeen": carburants[index]['codeEuropeen'],
+            "codeEuropeen": carburants[index]['code'],
             "disponible": true,
             "prix": i.text
           });
@@ -117,5 +118,45 @@ class StationsData{
      }
 
      return res;
+   }
+
+   Future<String> getCarburants(String id) async {
+     var url = Uri.parse('http://theslipe.myddns.me:8080/stations/' + id + '/carburants');
+     var carburants = await http.get(url);
+
+     return carburants.body;
+   }
+
+   Future<String> updateCarburant(List<TextEditingController> listeController, String id) async {
+     var carburants = await StationsCarburantsViewModel().getStationCarburant(id)  as List;
+     var index = 0;
+     var listeCarburantName = [];
+     var listeCarburantDetails = [];
+     for (var i in carburants){
+         listeCarburantName.add(carburants[index]['nom']);
+         listeCarburantDetails.add({
+           "nom": carburants[index]['nom'],
+           "codeEuropeen": carburants[index]['code'],
+           "disponible": true,
+           "prix": listeController[index].text != "" ?  listeController[index].text : 0
+         });
+         index++;
+     }
+
+     var global = await GlobalData().getGlobal();
+     final body ={
+       "listeCarburants": listeCarburantName,
+       "details": listeCarburantDetails
+     };
+     final jsonString = json.encode(body);
+     final uri = Uri.parse('http://theslipe.myddns.me:8080/stations/' + id + '/carburants');
+     final headers = {
+       HttpHeaders.contentTypeHeader: 'application/json',
+       HttpHeaders.authorizationHeader: 'Bearer '+global?["token"]
+     };
+     final response = await http.post(uri, headers: headers, body: jsonString);
+     print(response.body);
+     print(response.statusCode);
+     return response.body;
    }
 }

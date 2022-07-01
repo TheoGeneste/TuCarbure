@@ -10,6 +10,8 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:tu_carbure/data/favoris_data.dart';
+import 'package:tu_carbure/model/SaisiePrixParam.dart';
+import 'package:tu_carbure/view/screens/SaisiePrix.dart';
 import 'package:tu_carbure/view/viewmodels/stations_viewmodel.dart';
 import 'package:tu_carbure/view/widgets/panel_map.dart';
 
