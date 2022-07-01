@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:tu_carbure/data/stations_data.dart';
 import 'package:tu_carbure/view/widgets/liste_marques_selector.dart';
 import 'package:tu_carbure/view/widgets/liste_carburant_saisie_prix.dart';
@@ -82,6 +83,11 @@ class StationCreation extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal:32, vertical: 16),
                       child: TextFormField(
+                        keyboardType: TextInputType.number,
+                        maxLength: 5,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                        ],
                         controller: codePostalController,
                         decoration: const InputDecoration(
                           border: UnderlineInputBorder(),
@@ -117,6 +123,10 @@ class StationCreation extends StatelessWidget {
                                           constraints: BoxConstraints(minWidth: 100, maxWidth: 100),
                                           child:Expanded(
                                             child : TextFormField(
+                                              keyboardType: TextInputType.number,
+                                              inputFormatters: <TextInputFormatter>[
+                                                FilteringTextInputFormatter.allow(RegExp(r'[0-9]+[,.]{0,1}[0-9]*')),
+                                              ],
                                               controller: listeController[index],
                                               decoration: const InputDecoration(
                                                 border: UnderlineInputBorder(),

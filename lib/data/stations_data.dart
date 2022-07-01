@@ -127,7 +127,7 @@ class StationsData{
      return carburants.body;
    }
 
-   Future<String> updateCarburant(List<TextEditingController> listeController, String id) async {
+   Future<String> updateCarburant(List<TextEditingController> listeController, String id, List<bool> listeValueDispo) async {
      var carburants = await StationsCarburantsViewModel().getStationCarburant(id)  as List;
      var index = 0;
      var listeCarburantName = [];
@@ -137,8 +137,12 @@ class StationsData{
          listeCarburantDetails.add({
            "nom": carburants[index]['nom'],
            "codeEuropeen": carburants[index]['code'],
-           "disponible": true,
-           "prix": listeController[index].text != "" ?  listeController[index].text : 0
+           "disponible": listeController[index].text == 0 ? false : listeValueDispo[index],
+           "prix":
+           listeController[index].text != "" ?  (
+               double.parse(listeController[index].text) > 3 ? 3 :  double.parse(listeController[index].text) > 0.5 ? 0.5 :  listeController[index].text
+           ) :
+           0
          });
          index++;
      }

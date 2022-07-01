@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:tu_carbure/data/stations_data.dart';
 import 'package:tu_carbure/view/viewmodels/stationsCarburants_viewmodel.dart';
 
@@ -18,6 +19,7 @@ class SaisiePrix extends StatefulWidget {
 
 class _SaisiePrixState extends State<SaisiePrix>{
   List<TextEditingController> listeController = [];
+  List<bool> listeValueDispo = [];
 
   @override
   Widget build(BuildContext context) {
@@ -32,21 +34,57 @@ class _SaisiePrixState extends State<SaisiePrix>{
           title: Text('Mise à jour des prix'),
           actions: <Widget>[],
         ),
-      body:Form(
+      body:SingleChildScrollView(
+    child:Form(
           child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Padding(
+                  padding: EdgeInsets.only(top: 20),
+                  child: Row(
+                      children: <Widget>[
+                        Container(
+                            constraints: BoxConstraints(minWidth: 150, maxWidth: 150),
+                            child: Text(
+                                "Type",
+                                textAlign: TextAlign.center,
+                                style:TextStyle(
+                                    fontSize: 16
+                                )
+                            )
+                        ),
+                        Container(
+                          constraints: BoxConstraints(minWidth: 100, maxWidth: 100),
+                          child:Expanded(
+                              child : Text(
+                                  "Prix",
+                                  textAlign: TextAlign.center,
+                                  style:TextStyle(fontSize: 16)
+                              )
+                          ),
+                        ),
+                        Container(
+                          constraints: BoxConstraints(minWidth: 100, maxWidth: 100),
+                          child:Expanded(
+                            child : Text(
+                                "Disponible",
+                                textAlign: TextAlign.center,
+                                style:TextStyle(fontSize: 16)
+                            ),
+                          ),
+                        )]
+                  ),
+                ),
                 FutureBuilder(builder: (context, snapshot){
       if(snapshot.connectionState == ConnectionState.done && snapshot.hasData){
-        print("TEST");
-
-        print(snapshot.data);
-
         final data = snapshot.data as List;
         for (var i in data){
-          print(i["nom"]);
-          listeController.add(TextEditingController());
+          var textController = TextEditingController();
+          textController.text = i["prix"].toString();
+          listeController.add(textController);
+          listeValueDispo.add(i["disponible"]);
         }
+        print(listeValueDispo);
 
         return ListView.builder(
           shrinkWrap: true,
@@ -55,27 +93,46 @@ class _SaisiePrixState extends State<SaisiePrix>{
                 height: 60,
                 child: InkWell(
                   child: Row(
-                    children: <Widget>[
-                      Container(
-                          constraints: BoxConstraints(minWidth: 200, maxWidth: 200),
-                          child: Text(
-                              data[index]['nom'],
-                              style:TextStyle(fontSize: 16)
-                          )
-                      ),
-                      Container(
-                        constraints: BoxConstraints(minWidth: 100, maxWidth: 100),
-                        child:Expanded(
-                          child : TextFormField(
-                            controller: listeController[index],
-                            decoration: const InputDecoration(
-                              border: UnderlineInputBorder(),
+                        children: <Widget>[
+                          Container(
+                              constraints: BoxConstraints(minWidth: 150, maxWidth: 150),
+                              child: Text(
+                                  data[index]['nom'],
+                                  style:TextStyle(fontSize: 16)
+                              )
+                          ),
+                          Container(
+                            constraints: BoxConstraints(minWidth: 100, maxWidth: 100),
+                            child:Expanded(
+                              child : TextFormField(
+                                controller: listeController[index],
+                                keyboardType: TextInputType.number,
+                                inputFormatters: <TextInputFormatter>[
+                                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]+[,.]{0,1}[0-9]*')),
+                                ],
+                                decoration: const InputDecoration(
+                                  border: UnderlineInputBorder(),
+                                ),
+
+                              ),
                             ),
                           ),
-                        ),
-                      )
-                    ],
-                  ),
+                          Container(
+                            constraints: BoxConstraints(minWidth: 100, maxWidth: 100),
+                            child:Expanded(
+                              child : Checkbox(
+                                onChanged: (bool? value) {
+                                  setState(() {
+                                    listeValueDispo[index] = value! ? value : false;
+                                  });
+                                },
+                                value: listeValueDispo[index],
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+
                 )
             );
           },
@@ -90,7 +147,7 @@ class _SaisiePrixState extends State<SaisiePrix>{
         padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
         child: ElevatedButton(
           onPressed: () {
-            StationsData().updateCarburant(listeController, args.station['id']);
+            StationsData().updateCarburant(listeController, args.station['id'], listeValueDispo);
           },
           style: ElevatedButton.styleFrom(
             minimumSize: Size.fromHeight(40),
@@ -100,7 +157,7 @@ class _SaisiePrixState extends State<SaisiePrix>{
       ),
     ]
     )
-    )
+    ))
     );
   }
 
