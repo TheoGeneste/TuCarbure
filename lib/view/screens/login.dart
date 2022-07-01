@@ -72,19 +72,6 @@ class _LoginState extends State<Login>{
                           ),
                         )
                     ),
-                    /**Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 32, vertical: 16),
-                        child: CheckboxListTile(
-                          value: seSouvenirDeMoi,
-                          title: Text("Se souvenir de moi"),
-                          onChanged: (bool? value) {
-                            seSouvenirDeMoi = !seSouvenirDeMoi;
-                            print(seSouvenirDeMoi);
-                          },
-
-                        )
-                    ),**/
                     Padding(
                       padding: EdgeInsets.symmetric(
                           horizontal: 32, vertical: 16),
@@ -92,7 +79,6 @@ class _LoginState extends State<Login>{
                         onPressed: () {
                           _login();
 
-                          //TODO : Verif connexion reussi
                           Navigator.push(context, MaterialPageRoute(builder: (contex) => MainPage()));
                         },
                         style: ElevatedButton.styleFrom(

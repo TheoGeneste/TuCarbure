@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:tu_carbure/data/stations_data.dart';
 import 'package:tu_carbure/view/viewmodels/stationsCarburants_viewmodel.dart';
 
@@ -37,14 +38,51 @@ class _SaisiePrixState extends State<SaisiePrix>{
           child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Padding(
+                  padding: EdgeInsets.only(top: 20),
+                  child: Row(
+                      children: <Widget>[
+                        Container(
+                            constraints: BoxConstraints(minWidth: 150, maxWidth: 150),
+                            child: Text(
+                                "Type",
+                                textAlign: TextAlign.center,
+                                style:TextStyle(
+                                    fontSize: 16
+                                )
+                            )
+                        ),
+                        Container(
+                          constraints: BoxConstraints(minWidth: 100, maxWidth: 100),
+                          child:Expanded(
+                              child : Text(
+                                  "Prix",
+                                  textAlign: TextAlign.center,
+                                  style:TextStyle(fontSize: 16)
+                              )
+                          ),
+                        ),
+                        Container(
+                          constraints: BoxConstraints(minWidth: 100, maxWidth: 100),
+                          child:Expanded(
+                            child : Text(
+                                "Disponible",
+                                textAlign: TextAlign.center,
+                                style:TextStyle(fontSize: 16)
+                            ),
+                          ),
+                        )]
+                  ),
+                ),
                 FutureBuilder(builder: (context, snapshot){
       if(snapshot.connectionState == ConnectionState.done && snapshot.hasData){
         final data = snapshot.data as List;
         for (var i in data){
-          listeController.add(TextEditingController());
+          var textController = TextEditingController();
+          textController.text = i["prix"].toString();
+          listeController.add(textController);
           listeValueDispo.add(i["disponible"]);
         }
-
         print(listeValueDispo);
 
         return ListView.builder(
@@ -54,40 +92,46 @@ class _SaisiePrixState extends State<SaisiePrix>{
                 height: 60,
                 child: InkWell(
                   child: Row(
-                    children: <Widget>[
-                      Container(
-                          constraints: BoxConstraints(minWidth: 150, maxWidth: 150),
-                          child: Text(
-                              data[index]['nom'],
-                              style:TextStyle(fontSize: 16)
-                          )
-                      ),
-                      Container(
-                        constraints: BoxConstraints(minWidth: 100, maxWidth: 100),
-                        child:Expanded(
-                          child : TextFormField(
-                            controller: listeController[index],
-                            decoration: const InputDecoration(
-                              border: UnderlineInputBorder(),
+                        children: <Widget>[
+                          Container(
+                              constraints: BoxConstraints(minWidth: 150, maxWidth: 150),
+                              child: Text(
+                                  data[index]['nom'],
+                                  style:TextStyle(fontSize: 16)
+                              )
+                          ),
+                          Container(
+                            constraints: BoxConstraints(minWidth: 100, maxWidth: 100),
+                            child:Expanded(
+                              child : TextFormField(
+                                controller: listeController[index],
+                                keyboardType: TextInputType.number,
+                                inputFormatters: <TextInputFormatter>[
+                                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]+[,.]{0,1}[0-9]*')),
+                                ],
+                                decoration: const InputDecoration(
+                                  border: UnderlineInputBorder(),
+                                ),
+                                
+                              ),
                             ),
                           ),
-                        ),
+                          Container(
+                            constraints: BoxConstraints(minWidth: 100, maxWidth: 100),
+                            child:Expanded(
+                              child : Checkbox(
+                                onChanged: (bool? value) {
+                                  setState(() {
+                                    listeValueDispo[index] = value! ? value : false;
+                                  });
+                                },
+                                value: listeValueDispo[index],
+                              ),
+                            ),
+                          )
+                        ],
                       ),
-                      Container(
-                        constraints: BoxConstraints(minWidth: 100, maxWidth: 100),
-                        child:Expanded(
-                          child : Checkbox(
-                            onChanged: (bool? value) {
-                              setState(() {
-                                listeValueDispo[index] = value! ? value : false;
-                              });
-                            },
-                            value: listeValueDispo[index],
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
+
                 )
             );
           },
