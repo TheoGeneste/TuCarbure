@@ -96,7 +96,7 @@ class _MainPageState extends State<MainPage> {
         currentIndex: _index,
         showUnselectedLabels: false,
         onTap: _changePage,
-        items: const [
+        items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.map,),
             label: 'Map',
@@ -106,7 +106,7 @@ class _MainPageState extends State<MainPage> {
             label: 'Stations Favoris',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.login,),
+            icon: isLogged? Icon(Icons.account_circle) : Icon(Icons.login,),
             label: 'Login',
           )
         ],
