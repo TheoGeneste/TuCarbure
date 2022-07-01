@@ -19,4 +19,8 @@ class FavorisData{
 
   }
 
+  void removeFavoris(id) {
+    SharedPrefUtils.removeFav(id);
+  }
+
 }
